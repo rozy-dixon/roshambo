@@ -5,6 +5,9 @@ class Load extends Phaser.Scene {
 
     preload() {
         // loading bar
+
+        // load sprites
+        this.load.image('player-battle', './assets/images/player-battle.png')
     }
 
     create() {

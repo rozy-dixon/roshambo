@@ -16,7 +16,7 @@ let config = {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     zoom: Math.min((window.innerHeight/dimensions.height)-.01, (window.innerWidth/dimensions.width)-.01),
-    scene: [ Load, Play, Keys ]
+    scene: [ Load, Play, Battle, Keys ]
 }
 
 // game variables
@@ -24,6 +24,8 @@ const game = new Phaser.Game(config)
 // convenience variables
 const centerX = game.config.width/2
 const centerY = game.config.height/2
+const width = game.config.width
+const height = game.config.height
 // log variables
 const testColor = "color: #91aa86;"
 const goodColor = "color: #cfd1af;"
