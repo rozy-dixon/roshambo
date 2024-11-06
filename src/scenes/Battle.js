@@ -19,10 +19,30 @@ class Battle extends Phaser.Scene {
         // running checks
         console.log('%cBATTLE SCENE :^)', testColor)
 
-        // create boxes
-        this.opponentNameUIBox = this.add.rectangle(this.PADDING, this.PADDING, width/3, height/10, 0xffffff).setOrigin(0);
-        this.playerNameUIBox = this.add.rectangle(width/2, height/2, width/2 - this.PADDING, height/10, 0xffffff).setOrigin(0);
-        this.playerOptionsUIBox = this.add.rectangle(width/2, this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING, width/2 - this.PADDING, height - (this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING) - this.PADDING, 0xffffff).setOrigin(0);
+        // opponent UI boxes
+        this.opponentNameUIBox = this.add.rectangle(
+            this.PADDING,
+            this.PADDING,
+            width/3,
+            height/10,
+            0xffffff
+        ).setOrigin(0);
+
+        // player UI boxes
+        this.playerNameUIBox = this.add.rectangle(
+            width/2, 
+            height/2,
+            width/2 - this.PADDING,
+            height/10,
+            0xffffff
+        ).setOrigin(0);
+        this.playerOptionsUIBox = this.add.rectangle(
+            width/2,
+            this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING,
+            width/2 - this.PADDING,
+            height - (this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING) - this.PADDING,
+            0xffffff
+        ).setOrigin(0);
 
         // player and opponent
         this.opponent = {
@@ -36,64 +56,14 @@ class Battle extends Phaser.Scene {
         }
 
         // -------------------------------------- UI
-        // opponent static text
-        this.add.text(
-            this.opponentNameUIBox.x + this.PADDING, 
-            this.opponentNameUIBox.y + this.opponentNameUIBox.height / 2, 
-            `${this.opponent.name}`, 
-            this.TEXTSTYLE
-        ).setOrigin(0, 0.5)
 
-        this.opponentHealth = this.add.text(
-            this.opponentNameUIBox.x + this.opponentNameUIBox.width - this.PADDING,
-            this.opponentNameUIBox.y + this.opponentNameUIBox.height / 2, 
-            `${this.opponent.health}`,
-            this.TEXTSTYLE
-        ).setOrigin(1, 0.5)
+        this.opponentNamePlate = this.createNamePlate(this.opponentNameUIBox, this.opponent.name, this.opponent.health)
+        this.playerNamePlate = this.createNamePlate(this.playerNameUIBox, 'your name...', this.player.health)
 
-        // player static text
-        this.add.text(
-            this.playerNameUIBox.x + this.PADDING, 
-            this.playerNameUIBox.y + this.playerNameUIBox.height / 2, 
-            'your name...', 
-            this.TEXTSTYLE
-        ).setOrigin(0, 0.5)
-
-        this.opponentHealth = this.add.text(
-            this.playerNameUIBox.x + this.playerNameUIBox.width - this.PADDING,
-            this.playerNameUIBox.y + this.playerNameUIBox.height / 2, 
-            `${this.player.health}`,
-            this.TEXTSTYLE
-        ).setOrigin(1, 0.5)
-
-        // player option select text
-        this.attackText = this.add.text(
-            this.playerOptionsUIBox.x + this.playerOptionsUIBox.width/4,
-            this.playerOptionsUIBox.y + this.playerOptionsUIBox.height/4,
-            `${this.OPTIONS[0]}`,
-            this.TEXTSTYLE,
-        ).setOrigin(.5)
-
-        this.bagText = this.add.text(
-            this.playerOptionsUIBox.x + this.playerOptionsUIBox.width/4,
-            this.playerOptionsUIBox.y + this.playerOptionsUIBox.height - (this.playerOptionsUIBox.height/4),
-            `${this.OPTIONS[1]}`,
-            this.TEXTSTYLE,
-        ).setOrigin(.5)
-
-        this.runText = this.add.text(
-            this.playerOptionsUIBox.x + this.playerOptionsUIBox.width - (this.playerOptionsUIBox.width/4),
-            this.playerOptionsUIBox.y + this.playerOptionsUIBox.height/4,
-            `${this.OPTIONS[2]}`,
-            this.TEXTSTYLE,
-        ).setOrigin(.5)
-
-        this.defendText = this.add.text(
-            this.playerOptionsUIBox.x + this.playerOptionsUIBox.width - (this.playerOptionsUIBox.width/4),
-            this.playerOptionsUIBox.y + this.playerOptionsUIBox.height - (this.playerOptionsUIBox.height/4),
-            `${this.OPTIONS[3]}`,
-            this.TEXTSTYLE,
-        ).setOrigin(.5)
+        this.attackText = this.createOptionText(this.playerOptionsUIBox, 0)
+        this.bagText = this.createOptionText(this.playerOptionsUIBox, 1, false, true)
+        this.runText = this.createOptionText(this.playerOptionsUIBox, 2, true, false)
+        this.defendText = this.createOptionText(this.playerOptionsUIBox, 3, true, true)
 
         // visuals
         this.playerSprite = this.add.sprite((width - this.playerOptionsUIBox.width) / 2 - 100, height, 'player-battle').setOrigin(.5, 1).setScale(.5)
@@ -136,6 +106,8 @@ class Battle extends Phaser.Scene {
         }
     }
 
+    // ------------------------------------------ HELPER FUNCTIONS
+
     attachToText(arrow, text) {
         arrow.x = text.x - text.width / 2
         arrow.y = text.y
@@ -143,5 +115,34 @@ class Battle extends Phaser.Scene {
 
     selectText(x, y) {
         this.attachToText(this.arrow, this.optionTexts[x][y])
+    }
+
+    createNamePlate(UIBox, name, health) {
+        const nameText = this.add.text(
+            UIBox.x + this.PADDING, 
+            UIBox.y + UIBox.height / 2, 
+            `${name}`, 
+            this.TEXTSTYLE
+        ).setOrigin(0, 0.5)
+
+        const healthText = this.add.text(
+            UIBox.x + UIBox.width - this.PADDING,
+            UIBox.y + UIBox.height / 2, 
+            `${health}`,
+            this.TEXTSTYLE
+        ).setOrigin(1, 0.5)
+
+        return { nameText, healthText }
+    }
+
+    createOptionText(UIBox, index, xOffset = false, yOffset = false) {
+        const text = this.add.text(
+            xOffset ? UIBox.x + UIBox.width / 4 * 3 : UIBox.x + UIBox.width / 4,
+            yOffset ? UIBox.y + UIBox.height / 4 * 3 : UIBox.y + UIBox.height / 4,
+            `${this.OPTIONS[index]}`,
+            this.TEXTSTYLE,
+        ).setOrigin(.5)
+
+        return text
     }
 }
