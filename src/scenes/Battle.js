@@ -9,7 +9,7 @@ class Battle extends Phaser.Scene {
         this.FONTSIZE = 50;
         this.TEXTSTYLE = { fontSize: this.FONTSIZE, color: '#000000' }
 
-        this.OPTIONS = [ "ATTACK", "BAG", "RUN", "DEFEND" ]
+        this.OPTIONS = [ "ATTACK", "BAG", "DEFEND", "RUN" ]
         this.ATTACKOPTIONS = [ "rock", "paper", "scissors" ]
 
         // will need to take in opponent from overworld scene
@@ -100,19 +100,48 @@ class Battle extends Phaser.Scene {
         this.opponentSprite = this.add.circle((centerX / 2) * 3, this.PADDING, 300, 0xffffff)
 
         this.arrow = this.add.circle(this.attackText.x - this.attackText.width / 2, this.attackText.y, 25, 0x0000ff).setOrigin(1.5, .5)
+        this.arrowPosition = { x: 0, y: 0 }
 
-        this.optionTexts = [ this.attackText, this.bagText, this.runText, this.defendText ]
+        this.optionTexts = [
+            [this.attackText, this.bagText],
+            [this.runText, this.defendText]
+        ]        
+        this.selectText(this.arrowPosition.x, this.arrowPosition.y)
     }
 
     update() {
-        // selection navigation
-        if (cursors.up.isDown) {
-            console.log('poopoo')
+        if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+            if (this.arrowPosition.y > 0) {
+                this.arrowPosition.y -= 1
+                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+            }
+        }
+        if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
+            if (this.arrowPosition.x < 1) {
+                this.arrowPosition.x += 1
+                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+            }
+        }
+        if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+            if (this.arrowPosition.x > 0) {
+                this.arrowPosition.x -= 1
+                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+            }
+        }
+        if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
+            if (this.arrowPosition.y < 1) {
+                this.arrowPosition.y += 1
+                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+            }
         }
     }
 
-    attatchToText( arrow, text ) {
+    attachToText(arrow, text) {
         arrow.x = text.x - text.width / 2
         arrow.y = text.y
+    }
+
+    selectText(x, y) {
+        this.attachToText(this.arrow, this.optionTexts[x][y])
     }
 }
