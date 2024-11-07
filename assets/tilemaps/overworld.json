@@ -1,17 +1,28 @@
 {
     "overworld": [
-        ["1", "2","3","4","5"],
-        ["1", "2","3","4","5"],
-        ["1", "2","3","4","5"],
-        ["1", "2","3","4","5"],
-        ["1", "2","3","4","5"],
-        ["1", "2","3","4","5"],
-        ["1", "2","3","4","5"]
+        ["none", "none","none","none","none"],
+        ["none", "none","none","none","none"],
+        ["none", "none","none","none","none"],
+        ["none", "none","none","none","none"],
+        ["none", "none","none","none","none"],
+        ["none", "none","none","none","none"],
+        ["none", "none","none","none","none"]
     ],
     "key" : {
-        "0": "path to object you want :D",
-        "1": "path to object you want :D",
-        "2": "path to object you want :D"
+        "tree": "path to object you want :D",
+        "rock": "path to object you want :D",
+        "player": "path to object you want :D"
+    },
+    "objInfo":{
+        "tree":[
+           [[0,0],[0,1],[1,0],[1,1]] 
+        ],
+        "rock":[
+           [[0,0],[0,1],[1,0],[1,1]] 
+        ],
+        "player":[
+           [[0,0]] 
+        ]
     }
     
 }
