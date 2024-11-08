@@ -9,6 +9,7 @@ class Battle extends Phaser.Scene {
         this.FONTSIZE = 50;
         this.TEXTSTYLE = { fontSize: this.FONTSIZE, color: '#000000' }
 
+        this.MODES = [ "options", "attack", "bag", "defend", "run" ]
         this.OPTIONS = [ "ATTACK", "BAG", "DEFEND", "RUN" ]
         this.ATTACKOPTIONS = [ "rock", "paper", "scissors" ]
 
@@ -62,9 +63,9 @@ class Battle extends Phaser.Scene {
 
         this.attackText = this.createOptionText(this.playerOptionsUIBox, 0)
         this.bagText = this.createOptionText(this.playerOptionsUIBox, 1, false, true)
-        this.runText = this.createOptionText(this.playerOptionsUIBox, 2, true, false)
-        this.defendText = this.createOptionText(this.playerOptionsUIBox, 3, true, true)
-
+        this.defendText = this.createOptionText(this.playerOptionsUIBox, 2, true, false)
+        this.runText = this.createOptionText(this.playerOptionsUIBox, 3, true, true)
+        
         // visuals
         this.playerSprite = this.add.sprite((width - this.playerOptionsUIBox.width) / 2 - 100, height, 'player-battle').setOrigin(.5, 1).setScale(.5)
         this.opponentSprite = this.add.circle((centerX / 2) * 3, this.PADDING, 300, 0xffffff)
@@ -74,9 +75,14 @@ class Battle extends Phaser.Scene {
 
         this.optionTexts = [
             [this.attackText, this.bagText],
-            [this.runText, this.defendText]
+            [this.defendText, this.runText]
         ]        
         this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+
+        // what texts are available?
+        this.mode = this.MODES[0]
+
+        // -------------------------------------- MODE UI display
     }
 
     update() {
@@ -84,25 +90,50 @@ class Battle extends Phaser.Scene {
             if (this.arrowPosition.y > 0) {
                 this.arrowPosition.y -= 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
             }
         }
         if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
             if (this.arrowPosition.x < 1) {
                 this.arrowPosition.x += 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
             }
         }
         if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
             if (this.arrowPosition.x > 0) {
                 this.arrowPosition.x -= 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
             }
         }
         if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
             if (this.arrowPosition.y < 1) {
                 this.arrowPosition.y += 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
             }
+        }
+        
+        // refactor lol
+        if (Phaser.Input.Keyboard.JustDown(enterKey)) {
+            if (this.arrowPosition.x == 0 && this.arrowPosition.y == 0) {
+                this.changeMode(1)
+            }
+            if (this.arrowPosition.x == 0 && this.arrowPosition.y == 1) {
+                this.changeMode(2)
+            }
+            if (this.arrowPosition.x == 1 && this.arrowPosition.y == 0) {
+                this.changeMode(3)
+            }
+            if (this.arrowPosition.x == 1 && this.arrowPosition.y == 1) {
+                this.changeMode(4)
+            }
+        }
+
+        if (this.mode == "attack") {
+            this.attackText.alpha = this.defendText.alpha = this.bagText.alpha = this.runText.alpha = 0
+            this.arrow.alpha = 0
         }
     }
 
@@ -114,6 +145,7 @@ class Battle extends Phaser.Scene {
     }
 
     selectText(x, y) {
+        this.cameras.main.shake(50, 0.002)
         this.attachToText(this.arrow, this.optionTexts[x][y])
     }
 
@@ -145,4 +177,11 @@ class Battle extends Phaser.Scene {
 
         return text
     }
+
+    changeMode(modeIndex) {
+        this.mode = this.MODES[modeIndex]
+        console.log(this.mode)
+    }
+
+
 }

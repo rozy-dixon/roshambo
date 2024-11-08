@@ -16,7 +16,7 @@ let config = {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     zoom: Math.min((window.innerHeight/dimensions.height)-.01, (window.innerWidth/dimensions.width)-.01),
-    scene: [ Load, Play, Battle, Keys ]
+    scene: [ Load, Play, Battle, Results, Keys ]
 }
 
 // game variables
@@ -31,4 +31,7 @@ const testColor = "color: #91aa86;"
 const goodColor = "color: #cfd1af;"
 const badColor = "color: #c088ae;"
 // key variables
-let cursors
+let cursors, enterKey
+// style variables
+const padding = 25
+const fontSize = 50
