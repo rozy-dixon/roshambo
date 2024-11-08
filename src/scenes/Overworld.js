@@ -30,7 +30,7 @@ class worldGrid{
             this.grid = data["tilemap"]["matrix"];
             this.gridSize = data["tilemap"]["size"];
             this.keys = data["keys"];
-            console.log(this.grid);
+            console.table(this.grid);
         });
         
         
@@ -79,7 +79,6 @@ class Player extends Phaser.GameObjects.Sprite {
         super(scene, gridX * grid.tileSize,gridY * grid.tileSize, 'smile');
         this.grid = grid
         this.gridPos = new Vector2 (gridX, gridY);
-        this.truePos = new Vector2(gridX * grid.tileSize, gridY * grid.tileSize);
         
         
         this.gridTargetPos = this.gridPos;
@@ -102,13 +101,13 @@ class Player extends Phaser.GameObjects.Sprite {
             this.moveIn(new Vector2(-1,0));
         }
         if (this.cursors.down.isDown) {
-            this.moveIn(new Vector2(1,0));
+            this.moveIn(new Vector2(0,1));
         }
         if ( this.cursors.up.isDown) {
             this.moveIn(new Vector2(0,-1));
         }
         if (this.cursors.right.isDown) {
-            this.moveIn(new Vector2(0,1));
+            this.moveIn(new Vector2(1,0));
             console.log(this.gridPos);
         }
 
@@ -144,9 +143,10 @@ class Player extends Phaser.GameObjects.Sprite {
 
         console.log(velocityX);
         // Check if we're close to the target position
-        if (Phaser.Math.Distance.Between(this.x, this.y, this.trueTargetPos.x, this.trueTargetPos.y) < 5) {
+        if (Phaser.Math.Distance.Between(this.x, this.y, this.trueTargetPos.x, this.trueTargetPos.y) < 2) {
             this.x = this.trueTargetPos.x
             this.y = this.trueTargetPos.y; // Snap to target
+            this.gridPos
             this.moving = false; // Stop moving
         }
     }
