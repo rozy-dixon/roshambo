@@ -81,7 +81,7 @@ class Battle extends Phaser.Scene {
 
         // what texts are available?
         this.mode = this.MODES[0]
-        
+
 
         // -------------------------------------- MODE UI display
         this.attackOptionText = {
@@ -92,33 +92,68 @@ class Battle extends Phaser.Scene {
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(cursors.up) && this.mode == "options") {
-            if (this.arrowPosition.y > 0) {
-                this.arrowPosition.y -= 1
-                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
-                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
+        if (this.mode == "options") {
+            this.attackText.alpha = this.defendText.alpha = this.bagText.alpha = this.runText.alpha = 1
+            this.attackOptionText.rockText.alpha = this.attackOptionText.paperText.alpha = this.attackOptionText.scissorsText.alpha = 0
+            this.arrow.alpha = 1
+            if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+                if (this.arrowPosition.y > 0) {
+                    this.arrowPosition.y -= 1
+                    this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                    console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
+                }
+            }
+            if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
+                if (this.arrowPosition.x < 1) {
+                    this.arrowPosition.x += 1
+                    this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                    console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
+                }
+            }
+            if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+                if (this.arrowPosition.x > 0) {
+                    this.arrowPosition.x -= 1
+                    this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                    console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
+                }
+            }
+            if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
+                if (this.arrowPosition.y < 1) {
+                    this.arrowPosition.y += 1
+                    this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+                    console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
+                }
             }
         }
-        if (Phaser.Input.Keyboard.JustDown(cursors.right) && this.mode == "options") {
-            if (this.arrowPosition.x < 1) {
-                this.arrowPosition.x += 1
-                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
-                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
+
+        if (this.mode == "attack") {
+            this.attackText.alpha = this.defendText.alpha = this.bagText.alpha = this.runText.alpha = 0
+            this.attackOptionText.rockText.alpha = this.attackOptionText.paperText.alpha = this.attackOptionText.scissorsText.alpha = 1
+            this.arrow.alpha = 0
+            if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+                console.log('go to results scene')
+            }
+            if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
+                console.log('go to results scene')
+            }
+            if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+                console.log('go to results scene')
+            }
+            if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
+                this.changeMode(0)
             }
         }
-        if (Phaser.Input.Keyboard.JustDown(cursors.left) && this.mode == "options") {
-            if (this.arrowPosition.x > 0) {
-                this.arrowPosition.x -= 1
-                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
-                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
-            }
+
+        if (this.mode == "defend") {
+
         }
-        if (Phaser.Input.Keyboard.JustDown(cursors.down) && this.mode == "options") {
-            if (this.arrowPosition.y < 1) {
-                this.arrowPosition.y += 1
-                this.selectText(this.arrowPosition.x, this.arrowPosition.y)
-                console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
-            }
+
+        if (this.mode == "run") {
+
+        }
+
+        if (this.mode == "bag") {
+
         }
         
         // refactor lol
@@ -135,12 +170,6 @@ class Battle extends Phaser.Scene {
             if (this.arrowPosition.x == 1 && this.arrowPosition.y == 1) {
                 this.changeMode(4)
             }
-        }
-
-        if (this.mode == "attack") {
-            this.attackText.alpha = this.defendText.alpha = this.bagText.alpha = this.runText.alpha = 0
-            this.attackOptionText.rockText.alpha = this.attackOptionText.paperText.alpha = this.attackOptionText.scissorsText.alpha = 1
-            this.arrow.alpha = 0
         }
     }
 
