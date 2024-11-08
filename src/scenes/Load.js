@@ -5,6 +5,7 @@ class Load extends Phaser.Scene {
 
     preload() {
         // loading bar
+        this.load.image('smile','./assets/images/smile.png')
     }
 
     create() {
