@@ -1,12 +1,13 @@
-class Title extends Phaser.Scene {
+class Play extends Phaser.Scene {
     constructor() {
-        super('titleScene')
+        super('playScene')
     }
 
     create() {
         // running checks
         console.log('%cPLAY SCENE :^)', testColor)
-        this.scene.start('overworldScene')
+        // moving through
+        this.scene.start('titleScene')
     }
 
     update() {

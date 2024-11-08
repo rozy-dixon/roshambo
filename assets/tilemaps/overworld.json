@@ -1,13 +1,18 @@
 {
-    "overworld": [
-        ["none", "none","none","none","none"],
-        ["none", "none","none","none","none"],
-        ["none", "none","none","none","none"],
-        ["none", "none","none","none","none"],
-        ["none", "none","none","none","none"],
-        ["none", "none","none","none","none"],
-        ["none", "none","none","none","none"]
-    ],
+    "overworld": 
+        {
+            "martix":[
+                ["none", "none","none","none","none"],
+                ["none", "none","none","none","none"],
+                ["none", "none","none","none","none"],
+                ["none", "none","none","none","none"],
+                ["none", "none","none","none","none"],
+                ["none", "none","none","none","none"],
+                ["none", "none","none","none","none"]
+            ],
+            "size": [5,7],
+            "tileSize": "16"
+        },
     "key" : {
         "tree": "path to object you want :D",
         "rock": "path to object you want :D",

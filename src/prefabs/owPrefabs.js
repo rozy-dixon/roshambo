@@ -1,3 +1,18 @@
+async function loadJSON() {
+    try {
+        // Use a relative path to the JSON file
+        const response = await fetch('./data.json');
+        if (!response.ok) {
+            throw new Error("Failed to load JSON file");
+        }
+        const jsonData = await response.json(); // Parse JSON data
+        return (jsonData);
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+        return null;
+    }
+}
+
 class Vector2 {
     x = 0;
     y = 0;
@@ -9,7 +24,6 @@ class Vector2 {
         this.x = pos[0];
         this.y = pos[1];
     }
-
     add(other){
         sum = new Vector2 (0,0);
         sum.x = this.x + other.x;
@@ -18,17 +32,18 @@ class Vector2 {
     }
 }
 
-class worldGrid{
+export class worldGrid{
     grid = [[]];
     gridSize = [0,0]
     tileSize = 16;
     keys = {};
-
+    constructor(path){
+        this.setUp(loadJSON(path));
+    }
 
     getTile(pos){
         return ( this.grid[ posA.x ][ posA.y ] );
     }
-
     checkPopulated( pos ){
         return (this.getTile(pos));
     }
@@ -37,63 +52,34 @@ class worldGrid{
         this.getTile(posA).unPop() ;
         this.getTile(posB).pop();
     }
-
     popTile(pos, arg){
         this.getTile(pos).populated = arg;
     }
     dePopTile(pos){
         this.getTile(pos).populated = null;
     }
-
-    setUp(path){
-        // uses path to find the json file
-        // populates map with the given matrix
+    setUp(data){
+        // populates map with the given overworld info
         // paints it with the tiles in each position
         // populates each tile given objs
         // uses key to determine what color the tiles are
-        
-
-        fetchJSONFile(path).then(jsonData => {
-            console.log(jsonData);
-        });
-        
+        this.grid = data.overworld.matrix;
+        this.gridSize = data.overworld.size;
+        this.keys = data.keys;
     }
-
 }
-
 
 class tile{
     tileSprite = 0;
     populated = null; //pointer to what populates it
-}
-
-class mapObjPrefab{
-    name = '';
-    populates = [Vector2(0)]; // Array of positions this populates relative to starting position
-    speed = 0;
-    sprite
-
-    constructor(name, spots, speed, sprite){
-        this.name = name;
-        this.populates = spots;
-        this.speed = speed;
-        this.sprite = sprite
-    }
-}
-
-class mapObj{
-    type; // must be a map obj prefab
-    pos = new Vector2(0,0);
-
-    constructor(type,pos){
-        this.type = type;
-        this.pos= pos;
-    }
 
 }
 
 
-class liveObj{
+
+
+
+class moveableObj{
     constructor(phaserObject, speed = 100) {
         this.phaserObject = phaserObject; // Attach any Phaser object
         this.targetPos = new Phaser.Math.Vector2(phaserObject.x, phaserObject.y);
@@ -104,8 +90,11 @@ class liveObj{
 
     // Set a new target position and start moving towards it
     moveTo(x, y) {
-        this.targetPos.set(x, y);
-        this.moving = true;
+        if (!this.moving){
+            this.targetPos.set(x, y);
+            this.moving = true;
+        }
+        
     }
 
     update(delta) {
@@ -135,27 +124,36 @@ class liveObj{
 
 }
 
-export default class Player extends Phaser.Sprite {
-    posDetails = new mapObj;
-    moveDetails = new liveObj;
-    constructor(scene, map, x, y, texture) {
 
-        super(scene, x, y, texture);
+class Player extends Phaser.Sprite {
+    speed = 32;
+    constructor(scene, grid, gridX, gridY) {
+        this.pos = Vector2 [gridX, gridY];
+        this.moveDetails = new moveableObj (this, this.speed);
+        x = gridX * grid.tileSize;
+        y = gridY * grid.tileSize;
+        super(scene, x,y, 'path to player sprite');
 
         // Add this sprite to the scene
         scene.add.existing(this);
         scene.physics.add.existing(this);
+    }
+    update(){
+        // Listen for movement inputs
+        if (Phaser.cursors.IsDown(cursors.left)) {
+            moveTo(this.position.add(-1,0));
+        }
+        if (Phaser.Input.Keyboard.IsDown(cursors.down) ) {
+            moveTo(this.position.add(1,0));
+        }
+        if (Phaser.Input.Keyboard.IsDown(cursors.left) ) {
+            moveTo(this.position.add(0,-1));
+        }
+        if (this.cursors.down.IsDown(cursors.right)) {
+            moveTo(this.position.add(0,1));
+        }
 
-        // Custom properties
-        this.speed = 200;
-
-        // Define animations here, or call an external method for better structure
-        this.createAnimations();
+        // Listen for interact buttons
     }
 }
 
-class player{
-    type = 'player';
-    objInfo = new mapObj;
-    
-}
