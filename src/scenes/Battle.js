@@ -81,33 +81,39 @@ class Battle extends Phaser.Scene {
 
         // what texts are available?
         this.mode = this.MODES[0]
+        
 
         // -------------------------------------- MODE UI display
+        this.attackOptionText = {
+            rockText: this.createAttackText(this.playerOptionsUIBox, 0, 1, 2).setAlpha(0),
+            paperText: this.createAttackText(this.playerOptionsUIBox, 1, 2, 1).setAlpha(0),
+            scissorsText: this.createAttackText(this.playerOptionsUIBox, 2, 3, 2).setAlpha(0),
+        }
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.up) && this.mode == "options") {
             if (this.arrowPosition.y > 0) {
                 this.arrowPosition.y -= 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
                 console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
             }
         }
-        if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.right) && this.mode == "options") {
             if (this.arrowPosition.x < 1) {
                 this.arrowPosition.x += 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
                 console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
             }
         }
-        if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.left) && this.mode == "options") {
             if (this.arrowPosition.x > 0) {
                 this.arrowPosition.x -= 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
                 console.log(`${this.arrowPosition.x}, ${this.arrowPosition.y}`)
             }
         }
-        if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
+        if (Phaser.Input.Keyboard.JustDown(cursors.down) && this.mode == "options") {
             if (this.arrowPosition.y < 1) {
                 this.arrowPosition.y += 1
                 this.selectText(this.arrowPosition.x, this.arrowPosition.y)
@@ -133,6 +139,7 @@ class Battle extends Phaser.Scene {
 
         if (this.mode == "attack") {
             this.attackText.alpha = this.defendText.alpha = this.bagText.alpha = this.runText.alpha = 0
+            this.attackOptionText.rockText.alpha = this.attackOptionText.paperText.alpha = this.attackOptionText.scissorsText.alpha = 1
             this.arrow.alpha = 0
         }
     }
@@ -145,8 +152,10 @@ class Battle extends Phaser.Scene {
     }
 
     selectText(x, y) {
-        this.cameras.main.shake(50, 0.002)
-        this.attachToText(this.arrow, this.optionTexts[x][y])
+        if (this.mode == "options") {
+            this.cameras.main.shake(50, 0.002)
+            this.attachToText(this.arrow, this.optionTexts[x][y])
+        }
     }
 
     createNamePlate(UIBox, name, health) {
@@ -178,10 +187,19 @@ class Battle extends Phaser.Scene {
         return text
     }
 
+    createAttackText(UIBox, index, xPos, yPos) {
+        const text = this.add.text(
+            UIBox.x + UIBox.width / 4 * xPos,
+            UIBox.y + UIBox.height / 3 * yPos,
+            `${this.ATTACKOPTIONS[index]}`,
+            this.TEXTSTYLE,
+        ).setOrigin(.5)
+
+        return text
+    }
+
     changeMode(modeIndex) {
         this.mode = this.MODES[modeIndex]
         console.log(this.mode)
     }
-
-
 }
