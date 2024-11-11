@@ -57,8 +57,7 @@ class worldGrid{
                 if (this.grid[x] == null) {
                     this.grid[x] = [];
                 }
-                const currentTile = this.keys[background[y][x]];
-                this.grid[x][y] = new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset', currentTile).setOrigin(0));
+                this.grid[x][y] = new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset', background[x][y]).setOrigin(0));
             }
         }
     }

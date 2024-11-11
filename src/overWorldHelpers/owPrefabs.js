@@ -22,6 +22,27 @@ class objDetectionComponent{
     }
 }
 
+let directions = {
+    "north": new Vector2(0, -1 ),
+    "south": new Vector2(0, 1),
+    "east": new Vector2(1,0),
+    "west" : new Vector2(-1,0)
+}
+
+
+class stateMachine {
+    parent;
+    moveComp;
+    currentState;
+    stateList;
+    constructor(parent, states, startingState){
+        this.parent = parent;
+        this.moveComp = parent.moveComp;
+        this.currentState = startingState;
+        stateList = states;
+    }
+}
+
 class movementComponent{
     parent;
     world;
@@ -32,7 +53,7 @@ class movementComponent{
     trueTargetPos = new Vector2(0,0);
 
     moving = false;
-    direction = new Vector2(0,0);
+    direction = new Vector2(0,1);
     speed = 0;
 
     constructor(parent, world, gridPos){
@@ -59,14 +80,16 @@ class movementComponent{
     }
 
 
-    moveIn(dir) {
-        const tempTarget = this.gridPos.add(dir);
+    updateDir(dir){
+        this.dir = dir;
+        // update the sprite appropriately
+    }
+    moveForward() {
+        const tempTarget = this.gridPos.add(this.dir);
         if (this.moving || !this.parent.objDetection.checkIfEnterable(tempTarget)) {
             return;
         }
         
-
-        this.direction = dir;
         this.gridTargetPos.match(tempTarget); // Use add to set a new position
         this.world.popTile(this.gridTargetPos, this.parent);
         this.trueTargetPos.x = this.gridTargetPos.x * this.world.tileSize;
@@ -111,16 +134,20 @@ class Player extends Phaser.GameObjects.Sprite {
     update(time, delta) {
         // Listen for movement inputs
         if (this.cursors.left.isDown) {
-            this.movement.moveIn(new Vector2(-1, 0));
+            this.updateDir( new Vector2 (-1,0))
+            this.movement.moveForward();
         }
         if (this.cursors.down.isDown) {
-            this.movement.moveIn(new Vector2(0, 1));
+            this.movement.updateDir(new Vector2(0, 1))
+            this.movement.moveForward();
         }
         if (this.cursors.up.isDown) {
-            this.movement.moveIn(new Vector2(0, -1));
+            this.movement.updateDir(new Vector2(0, -1))
+            this.movement.moveForward();
         }
         if (this.cursors.right.isDown) {
-            this.movement.moveIn(new Vector2(1, 0));
+            this.movement.updateDir(new Vector2(1, 0))
+            this.movement.moveForward();
         }
         this.movement.update(time,delta);
     }
