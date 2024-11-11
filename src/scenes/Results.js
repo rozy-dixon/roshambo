@@ -9,8 +9,6 @@ class Results extends Phaser.Scene {
     }
 
     create() {
-        console.log(this.ATTACK)
-        console.log(this.OPPONENT_ATTACK)
     }
 
     update() {
