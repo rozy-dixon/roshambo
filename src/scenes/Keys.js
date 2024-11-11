@@ -7,5 +7,8 @@ class Keys extends Phaser.Scene {
         // running checks
         console.log('%cKEYS SCENE :^)', testColor)
         window.localStorage ? console.log('%cLocal storage supported by this cat! (^･･^=)~', goodColor) : console.log('%cLocal storage not supported by this cat ~(=^･･^)', badColor)
+
+        cursors = this.input.keyboard.createCursorKeys()
+        enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
     }
 }

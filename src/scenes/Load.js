@@ -11,6 +11,9 @@ class Load extends Phaser.Scene {
             frameWidth: 32,
             frameHeight: 32
         })
+
+        // load sprites
+        this.load.image('player-battle', './assets/images/player-battle.png')
     }
 
     create() {
