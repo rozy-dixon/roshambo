@@ -1,0 +1,45 @@
+{
+    "tilemap": 
+    {
+        "layers":{
+            "background":[
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"],
+                ["grass", "grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass","grass"]
+            ],
+            "obstacles": [
+                {
+                    "type":"tree",
+                    "pos":[1,5]
+                },
+                {
+                    "type":"tree",
+                    "pos":[0,2]
+                }
+            ]
+        },
+        
+        "tileSize": 32
+    },
+    "key" : {
+        "grass": "",
+        "tree": "path to object you want :D",
+        "rock": "path to object you want :D",
+        "player": "path to object you want :D"
+    },
+    "objInfo":{
+        "tree":{
+           "hitbox":[[0,0],[0,1],[1,0],[1,1]],
+           "images":[[30, 0, 0],[31,1,0],[40,0,1],[41,1,1]] 
+        }
+    }
+    
+}
