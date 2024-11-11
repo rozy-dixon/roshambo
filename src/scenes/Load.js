@@ -6,7 +6,8 @@ class Load extends Phaser.Scene {
     preload() {
         // loading bar
         this.load.json('worldData', 'src/overWorldHelpers/overWorld.json');
-        this.load.image('smile','./assets/images/placeHolderPlayer.png')
+        this.load.image('smile','./assets/images/placeHolderPlayer.png');
+        this.load.image('enemy','./assets/images/placeHolderEnemy.png')
         this.load.spritesheet('tileset', './assets/images/tileMapv2.png',{
             frameWidth: 32,
             frameHeight: 32

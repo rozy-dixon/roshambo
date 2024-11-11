@@ -19,7 +19,8 @@ class Overworld extends Phaser.Scene {
         this.cameras.main.setZoom(3);
         this.cameras.main.startFollow(this.player);
 
-
+        this.enemies = []
+        this.enemies.push( new NPC(this, this.world, 10,10)),
 
 
         // set up obstacles in the scene

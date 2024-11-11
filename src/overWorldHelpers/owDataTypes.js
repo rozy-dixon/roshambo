@@ -51,17 +51,15 @@ class worldGrid{
         const background = data["tilemap"]["layers"]["background"];
         this.tileSize = data["tilemap"]["tileSize"];
         this.gridSize = new Vector2(background[0].length, background.length);
+        this.keys = data["key"];
         for (let y = 0; y < this.gridSize.y; y++) {
             for (let x = 0; x < this.gridSize.x; x++) {
                 if (this.grid[x] == null) {
                     this.grid[x] = [];
                 }
-                this.grid[x][y] = new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset', 1).setOrigin(0));
+                const currentTile = this.keys[background[y][x]];
+                this.grid[x][y] = new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset', currentTile).setOrigin(0));
             }
-        }
-        this.keys = data["keys"];
-        if (onLoadedCallback) {
-            onLoadedCallback(); // Call the callback when loading is complete
         }
     }
 
