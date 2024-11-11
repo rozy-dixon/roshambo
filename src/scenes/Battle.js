@@ -5,8 +5,8 @@ class Battle extends Phaser.Scene {
 
     init() {
         // UI variables
-        this.PADDING = 25;
-        this.FONTSIZE = 50;
+        this.PADDING = 25
+        this.FONTSIZE = 50
         this.TEXTSTYLE = { fontSize: this.FONTSIZE, color: '#000000' }
 
         this.MODES = [ "options", "attack", "bag", "defend", "run" ]
@@ -27,7 +27,7 @@ class Battle extends Phaser.Scene {
             width/3,
             height/10,
             0xffffff
-        ).setOrigin(0);
+        ).setOrigin(0)
 
         // player UI boxes
         this.playerNameUIBox = this.add.rectangle(
@@ -36,19 +36,19 @@ class Battle extends Phaser.Scene {
             width/2 - this.PADDING,
             height/10,
             0xffffff
-        ).setOrigin(0);
+        ).setOrigin(0)
         this.playerOptionsUIBox = this.add.rectangle(
             width/2,
             this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING,
             width/2 - this.PADDING,
             height - (this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING) - this.PADDING,
             0xffffff
-        ).setOrigin(0);
+        ).setOrigin(0)
 
         // player and opponent
         this.opponent = {
             name: "Stalone",
-            favors: this.ATTACKOPTIONS[0],
+            favors: 0,
             health: 1,
         }
 
@@ -139,14 +139,23 @@ class Battle extends Phaser.Scene {
             this.bagOptionText.bagText.alpha = 0
             this.defendOptionText.defendText.alpha = 0
             this.arrow.alpha = 0
+            if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+                this.scene.start('resultsScene', {
+                    OPPONENT_ATTACK: this.ATTACKOPTIONS[this.weightedAttack(this.opponent.favors)],
+                    ATTACK: this.ATTACKOPTIONS[0]
+                })
+            }
             if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
-                console.log('go to results scene')
+                this.scene.start('resultsScene', {
+                    OPPONENT_ATTACK: this.ATTACKOPTIONS[this.weightedAttack(this.opponent.favors)],
+                    ATTACK: this.ATTACKOPTIONS[1]
+                })
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
-                console.log('go to results scene')
-            }
-            if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
-                console.log('go to results scene')
+                this.scene.start('resultsScene', {
+                    OPPONENT_ATTACK: this.ATTACKOPTIONS[this.weightedAttack(this.opponent.favors)],
+                    ATTACK: this.ATTACKOPTIONS[2]
+                })
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.down)) {
                 this.changeMode(0)
@@ -197,6 +206,19 @@ class Battle extends Phaser.Scene {
     }
 
     // ------------------------------------------ HELPER FUNCTIONS
+
+    weightedAttack(wieghtedIndex, range = 3) {
+        const weights = Array.from({ length: range }, (_, i) => (i === wieghtedIndex ? 5 : 1))
+        const totalWeight = weights.reduce((sum, weight) => sum + weight, 0)
+
+        let randomValue = Math.random() * totalWeight
+        for (let i = 0; i < range; i++) {
+            randomValue -= weights[i]
+            if (randomValue < 0) {
+            return i
+            }
+        }
+    }
 
     attachToText(arrow, text) {
         arrow.x = text.x - text.width / 2
