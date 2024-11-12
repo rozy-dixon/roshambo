@@ -9,6 +9,9 @@ class Results extends Phaser.Scene {
     }
 
     create() {
+        setTimeout(() => {
+            this.scene.start('overworldScene')
+        }, 1000)
     }
 
     update() {

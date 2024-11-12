@@ -81,8 +81,7 @@ class worldGrid{
     interact(pos){
         let temp = this.getTile(pos)
         if (temp != null && temp.populated && temp.populated.interactable == true){
-            temp.populated.interact();
-            return(true);
+            return(temp.populated.interact());
         }
         return(false);
     }

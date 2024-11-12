@@ -20,14 +20,12 @@ class Overworld extends Phaser.Scene {
         this.cameras.main.startFollow(this.player);
 
         this.enemies = []
-        this.enemies.push( new NPC(this, this.world, 10,10))
-
+        
+        const stalone = new NPC(this, this.world, 10, 10, "Stalone", )
+        this.enemies.push(stalone)
 
         // set up obstacles in the scene
         this.addObstacles(worldData);
-        
-
-
     }
 
     update(time,delta) {
@@ -35,6 +33,7 @@ class Overworld extends Phaser.Scene {
             this.player.update(time,delta);
         }   
     }
+    
     addObstacles(worldData){
         this.obstacles = []
         // Get the list of obstacles needed

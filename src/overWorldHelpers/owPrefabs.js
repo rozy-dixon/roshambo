@@ -174,9 +174,10 @@ class Player extends Phaser.GameObjects.Sprite {
 }
 
 class NPC extends Phaser.GameObjects.Sprite {
-    constructor(scene, world, gridX, gridY) {
+    constructor(scene, world, gridX, gridY, name) {
         super(scene, gridX * world.tileSize, gridY * world.tileSize, 'enemy');
-
+        this.scene = scene
+        this.name = name;
         this.world = world;
         this.speed = 32; // Speed in pixels per second
         
@@ -192,7 +193,12 @@ class NPC extends Phaser.GameObjects.Sprite {
 
     interact(){
         console.log("intertacted!!@!")
+
+        // text? dialogue?
+        this.scene.scene.start('battleScene');
+        return true;
     }
+
     update(time, delta) {
         this.movement.update(time,delta);
     }
