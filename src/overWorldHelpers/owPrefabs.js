@@ -30,18 +30,8 @@ let directions = {
 }
 
 
-class stateMachine {
-    parent;
-    moveComp;
-    currentState;
-    stateList;
-    constructor(parent, states, startingState){
-        this.parent = parent;
-        this.moveComp = parent.moveComp;
-        this.currentState = startingState;
-        stateList = states;
-    }
-}
+
+
 
 class movementComponent{
     parent;
@@ -53,7 +43,7 @@ class movementComponent{
     trueTargetPos = new Vector2(0,0);
 
     moving = false;
-    direction = new Vector2(0,1);
+    direction = new Vector2(0, 1);
     speed = 0;
 
     constructor(parent, world, gridPos){
@@ -81,14 +71,19 @@ class movementComponent{
 
 
     updateDir(dir){
-        this.dir = dir;
+        if (!this.moving){
+            this.direction = dir.copy();
+        }
+        
         // update the sprite appropriately
     }
+    
     moveForward() {
-        const tempTarget = this.gridPos.add(this.dir);
+        const tempTarget = this.gridPos.add(this.direction);
         if (this.moving || !this.parent.objDetection.checkIfEnterable(tempTarget)) {
             return;
         }
+        this.parent.state = "mv"
         
         this.gridTargetPos.match(tempTarget); // Use add to set a new position
         this.world.popTile(this.gridTargetPos, this.parent);
@@ -104,6 +99,8 @@ class movementComponent{
         this.parent.x += velocityX;
         this.parent.y += velocityY;
 
+        //console.log(Phaser.Math.Distance.Between(this.parent.x, this.parent.y, this.trueTargetPos.x, this.trueTargetPos.y))
+
         if (Phaser.Math.Distance.Between(this.parent.x, this.parent.y, this.trueTargetPos.x, this.trueTargetPos.y) < 2) {
             this.parent.x = this.trueTargetPos.x;
             this.parent.y = this.trueTargetPos.y; // Snap to target
@@ -111,12 +108,15 @@ class movementComponent{
             this.world.dePopTile(this.gridPos);
             this.gridPos = this.gridTargetPos.copy(); // Update the grid position
             this.moving = false; // Stop moving
+            this.parent.state = "idle";
         }
     }
 }
 
 
 class Player extends Phaser.GameObjects.Sprite {
+    states = ["idle", "walk", "talk"]
+    currentState = "idle";
     constructor(scene, world, gridX, gridY) {
         super(scene, gridX * world.tileSize, gridY * world.tileSize, 'smile');
 
@@ -129,12 +129,27 @@ class Player extends Phaser.GameObjects.Sprite {
         // Add this sprite to the scene
         this.scene.add.existing(this).setOrigin(0, 0);
         this.cursors = scene.input.keyboard.createCursorKeys();
+
+
+        //on button press
+        /* this.world.getTile() current pos + direction)
+        */
+    }
+
+
+    
+    updateStateMachine(){
+        if (this.currentState == "idle"){
+            // listen for inputs
+            
+        }
     }
 
     update(time, delta) {
+        this.updateStateMachine();
         // Listen for movement inputs
         if (this.cursors.left.isDown) {
-            this.updateDir( new Vector2 (-1,0))
+            this.movement.updateDir( new Vector2 (-1,0))
             this.movement.moveForward();
         }
         if (this.cursors.down.isDown) {
@@ -149,10 +164,14 @@ class Player extends Phaser.GameObjects.Sprite {
             this.movement.updateDir(new Vector2(1, 0))
             this.movement.moveForward();
         }
+        if (this.cursors.space.isDown){
+            const tempTarget = this.movement.gridPos.add(this.movement.direction)
+            console.log(tempTarget)
+            this.world.interact(tempTarget)
+        }
         this.movement.update(time,delta);
     }
 }
-
 
 class NPC extends Phaser.GameObjects.Sprite {
     constructor(scene, world, gridX, gridY) {
@@ -167,16 +186,17 @@ class NPC extends Phaser.GameObjects.Sprite {
         // Add this sprite to the scene
         this.scene.add.existing(this).setOrigin(0, 0);
         this.cursors = scene.input.keyboard.createCursorKeys();
+
+        this.interactable = true;
     }
 
+    interact(){
+        console.log("intertacted!!@!")
+    }
     update(time, delta) {
         this.movement.update(time,delta);
     }
 }
-
-
-
-
 
 class obst {
     constructor(scene, world,position, data) {

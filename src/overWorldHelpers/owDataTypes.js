@@ -78,7 +78,14 @@ class worldGrid{
     dePopTile(pos){
         this.getTile(pos).populated = null;
     }
-
+    interact(pos){
+        let temp = this.getTile(pos)
+        if (temp != null && temp.populated && temp.populated.interactable == true){
+            temp.populated.interact();
+            return(true);
+        }
+        return(false);
+    }
     checkEnterable(pos){
         let row = this.grid[pos.x]
         if (row == null || row[pos.y] == null || row[pos.y].populated){

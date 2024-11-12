@@ -30,6 +30,6 @@ class Load extends Phaser.Scene {
         // running checks
         console.log('%cLOAD SCENE :^)', testColor)
         // moving through
-        this.scene.start('titleScene')
+        this.scene.start('overworldScene')
     }
 }
