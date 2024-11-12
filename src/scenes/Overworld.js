@@ -9,6 +9,8 @@ class Overworld extends Phaser.Scene {
         console.log('%cOVERWORLD SCENE :^)', testColor)
         window.localStorage ? console.log('%cLocal storage supported by this cat! (^･･^=)~', goodColor) : console.log('%cLocal storage not supported by this cat ~(=^･･^)', badColor)
 
+        this.scene.start("battleScene")
+
         // Load the data once and then pass it along
         const worldData = this.cache.json.get('worldData');
         this.world = new worldGrid(worldData, this);
