@@ -22,14 +22,6 @@ class objDetectionComponent{
     }
 }
 
-let directions = {
-    "north": new Vector2(0, -1 ),
-    "south": new Vector2(0, 1),
-    "east": new Vector2(1,0),
-    "west" : new Vector2(-1,0)
-}
-
-
 
 
 
@@ -91,26 +83,37 @@ class movementComponent{
         this.trueTargetPos.y = this.gridTargetPos.y * this.world.tileSize;
         this.moving = true;
     }
-
     moveRoutine(time, delta) {
+        // Calculate velocities based on direction, speed, and time delta
         const velocityX = this.direction.x * this.speed * (delta / 1000);
         const velocityY = this.direction.y * this.speed * (delta / 1000);
-
+    
+        // Update position
         this.parent.x += velocityX;
         this.parent.y += velocityY;
-
-        //console.log(Phaser.Math.Distance.Between(this.parent.x, this.parent.y, this.trueTargetPos.x, this.trueTargetPos.y))
-
-        if (Phaser.Math.Distance.Between(this.parent.x, this.parent.y, this.trueTargetPos.x, this.trueTargetPos.y) < 2) {
-            this.parent.x = this.trueTargetPos.x;
-            this.parent.y = this.trueTargetPos.y; // Snap to target
-            
-            this.world.dePopTile(this.gridPos);
-            this.gridPos = this.gridTargetPos.copy(); // Update the grid position
-            this.moving = false; // Stop moving
-            this.parent.state = "idle";
-        }
+    
+        // Check if the object has reached or overshot the target position in X or Y directions
+        const checkAndCorrectPosition = (axis) => {
+            if (this.direction[axis] !== 0) {
+                const currentPos = this.parent[axis];
+                const targetPos = this.trueTargetPos[axis];
+    
+                if ((this.direction[axis] > 0 && currentPos > targetPos) ||
+                    (this.direction[axis] < 0 && currentPos < targetPos)) {
+                    
+                    this.parent[axis] = targetPos; // Snap to target position
+                    this.world.dePopTile(this.gridPos); // Update world grid
+                    this.gridPos = this.gridTargetPos.copy(); // Update grid position
+                    this.moving = false; // Stop movement
+                }
+            }
+        };
+    
+        // Apply position correction for both X and Y axes
+        checkAndCorrectPosition('x');
+        checkAndCorrectPosition('y');
     }
+    
 }
 
 
@@ -121,7 +124,7 @@ class Player extends Phaser.GameObjects.Sprite {
         super(scene, gridX * world.tileSize, gridY * world.tileSize, 'smile');
 
         this.world = world;
-        this.speed = 128; // Speed in pixels per second
+        this.speed = 200; // Speed in pixels per second
         
         this.objDetection = new objDetectionComponent(world);
         this.movement = new movementComponent(this, world, new Vector2(gridX,gridY));
