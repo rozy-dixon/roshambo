@@ -166,8 +166,6 @@ class Player extends Phaser.GameObjects.Sprite {
         }
         if (this.cursors.space.isDown){
             const tempTarget = this.movement.gridPos.add(this.movement.direction)
-            console.log(tempTarget)
-            this.world.interact(tempTarget)
         }
         this.movement.update(time,delta);
     }
@@ -192,7 +190,6 @@ class NPC extends Phaser.GameObjects.Sprite {
     }
 
     interact(){
-        console.log("intertacted!!@!")
 
         // text? dialogue?
         this.scene.scene.start('battleScene');
@@ -217,8 +214,6 @@ class obst {
             let walker = new Vector2(i[0],i [1])
             let hitboxPos = objPos.add(walker);
 
-            console.log(hitboxPos)
-            console.log(world.getTile(hitboxPos))
 
             if (!world.checkEnterable(hitboxPos)){
                 throw new Error("Overlapping objects on tile map");
@@ -233,8 +228,6 @@ class obst {
         }
         this.images= []
         // Add this images to the scene
-        console.log(data)
-        console.log(data["images"])
         for (let i of data["images"]){
             let walker = new Vector2(i[1],i [2])
             let imagePos = objPos.add(walker);
