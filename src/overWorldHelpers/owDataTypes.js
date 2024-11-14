@@ -34,20 +34,16 @@ class Vector2 {
 
 class tile{
     tileSprite;
-    populated = null; //pointer to what populates it
+    obj = null; //pointer to what populates it
     constructor(ts){
         this.tileSprite = ts;
     }
 }
 
 class worldGrid{
-    grid = []
-    tileSize = 16;
-    keys = {};
-    scene;
-    
     constructor(data, scene, onLoadedCallback) {
         this.scene = scene;
+        this.grid = []
         const background = data["tilemap"]["layers"]["background"];
         this.tileSize = data["tilemap"]["tileSize"];
         this.gridSize = new Vector2(background[0].length, background.length);
@@ -61,35 +57,35 @@ class worldGrid{
             }
         }
     }
-
-    getTile(pos){
-        let row = this.grid[pos.x]
-        if (row){
-            return ( this.grid[ pos.x ][ pos.y ] );
-        }
-        return null;
+     // Create the grid from background data
+     createGrid(background) {
+        return background.map((row, y) => 
+            row.map((tileId, x) => 
+                new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset', tileId).setOrigin(0))
+            )
+        );
     }
-    checkPopulated( pos ){
-        return (this.getTile(pos).populated);
+
+
+
+    getTile(pos) {
+        return (this.grid[pos.x] && this.grid[pos.x][pos.y]) || null;
     }
     popTile(pos, arg){
-        this.getTile(pos).populated = arg;
+        this.getTile(pos).obj = arg;
     }
     dePopTile(pos){
-        this.getTile(pos).populated = null;
+        this.getTile(pos).obj = null;
     }
     interact(pos){
         let temp = this.getTile(pos)
-        if (temp != null && temp.populated && temp.populated.interactable == true){
-            return(temp.populated.interact());
+        if (temp != null && temp.obj && temp.obj.interactable == true){
+            return(temp.obj.interact());
         }
         return(false);
     }
-    checkEnterable(pos){
-        let row = this.grid[pos.x]
-        if (row == null || row[pos.y] == null || row[pos.y].populated){
-            return (false);
-        }
-        return (true);
+    isTileEnterable(pos) {
+        const tile = this.getTile(pos);
+        return tile && !tile.obj;
     }
 }

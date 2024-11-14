@@ -9,23 +9,6 @@ class Overworld extends Phaser.Scene {
         console.log('%cOVERWORLD SCENE :^)', testColor)
         window.localStorage ? console.log('%cLocal storage supported by this cat! (^･･^=)~', goodColor) : console.log('%cLocal storage not supported by this cat ~(=^･･^)', badColor)
 
-
-        // Instantiate the TextBox class
-        this.textBox = new TextBox(this, {
-            width: 400,
-            height: 100,
-            x: 650,
-            y: 650,
-            textSpeed: 50,
-            backgroundColor: 0x000000,
-            textColor: '#ffffff',
-            fontSize: '18px',
-            fontFamily: 'Arial',
-            padding: { x: 20, y: 20 }
-        });
-
-        
-         this.talk(["haihaihelolol","eeeeee", "wASasdasdasdasdw"])
         
         // Optionally, you can use events or player actions to trigger more text
         
@@ -35,14 +18,14 @@ class Overworld extends Phaser.Scene {
         this.world = new worldGrid(worldData, this);
 
         // After grid is created, we can initialize the player and other objects
-        this.player = new Player(this, this.world, 0, 0, 'smile');
+        this.player = new Player(this, 0, 0, 'smile');
         this.player.setDepth(1);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setZoom(3);
 
         this.enemies = []
         
-        const stalone = new NPC(this, this.world, 10, 10, "Stalone", )
+        const stalone = new NPC(this, 10, 10,5, "enemy", "Stalone" )
         this.enemies.push(stalone)
 
         // set up obstacles in the scene
