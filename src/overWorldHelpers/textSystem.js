@@ -23,8 +23,7 @@ class TextBox {
         this.isTyping = false;      // Flag to track if typing effect is active
         this.typingEvent = null;    // Event reference for typing effect
 
-        // Callback function to execute when typing completes
-        this.onComplete = null;
+        
 
         // Create text box background
         this.createBackground();
