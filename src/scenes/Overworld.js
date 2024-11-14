@@ -24,17 +24,11 @@ class Overworld extends Phaser.Scene {
             padding: { x: 20, y: 20 }
         });
 
-        // Display some text when the scene starts
-        this.textBox.showTextBox(); // Make sure the textbox is visible
-        this.textBox.showText("Welcome to the game! This is an example of RPG-style text.");
-
+        
+         this.talk(["haihaihelolol","eeeeee", "wASasdasdasdasdw"])
+        
         // Optionally, you can use events or player actions to trigger more text
-        this.input.keyboard.on('keydown-SPACE', () => {
-            if (!this.textBox.isTyping) {
-                this.textBox.showText("Press SPACE to continue the story!");
-            }
-        });
-
+        
 
         // Load the data once and then pass it along
         const worldData = this.cache.json.get('worldData');
@@ -70,5 +64,12 @@ class Overworld extends Phaser.Scene {
             const current = worldData["objInfo"][obstacle["type"]]
             this.obstacles.push(new obst(this,this.world, obstacle["pos"], current))
         }
+    }
+    talk(wordPacks){
+        // enter talk mode, so world stops,
+
+        // 
+        
+
     }
 }

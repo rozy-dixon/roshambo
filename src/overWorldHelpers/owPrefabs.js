@@ -132,11 +132,6 @@ class Player extends Phaser.GameObjects.Sprite {
         // Add this sprite to the scene
         this.scene.add.existing(this).setOrigin(0, 0);
         this.cursors = scene.input.keyboard.createCursorKeys();
-
-
-        //on button press
-        /* this.world.getTile() current pos + direction)
-        */
     }
 
 
