@@ -53,7 +53,8 @@ class worldGrid{
                 if (this.grid[x] == null) {
                     this.grid[x] = [];
                 }
-                this.grid[x][y] = new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset', background[x][y]).setOrigin(0));
+                // maybe change this to have a default tile instead of showing no tile. this works better if there are layers.
+                this.grid[x][y] = background[x][y] >= 0? ( new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset',  background[x][y]).setOrigin(0)) ): null ;
             }
         }
     }
@@ -79,7 +80,9 @@ class worldGrid{
     }
     interact(pos){
         let temp = this.getTile(pos)
+        console.log(temp)
         if (temp != null && temp.obj && temp.obj.interactable == true){
+            console.log(temp)
             return(temp.obj.interact());
         }
         return(false);

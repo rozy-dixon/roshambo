@@ -1,3 +1,35 @@
+class Character extends Phaser.GameObjects.Sprite{
+    constructor(scene, gridX, gridY, speed, sprite) {
+
+        super(scene, gridX * scene.world.tileSize, gridY * scene.world.tileSize, sprite);
+        
+        this.world = scene.world
+        this.speed = speed || 200; // Speed in pixels per second
+        
+        this.gridObj = new gridObjComponent(this, new Vector2(gridX, gridY), new Vector2(0,1))
+        this.walk = new walkComponent( this, this.world, new Vector2(gridX, gridY));
+        
+        // Add this sprite to the scene
+        this.scene.add.existing(this).setOrigin(0, 0);
+        this.sm = new stateMachine();
+    }
+
+    setUpSM(states){
+        //adding states.
+        for ( let i of states){
+            this.sm.addState(i);
+        }
+        this.sm.changeState("idle");
+    }
+
+    update(time, delta) {
+        // Listen for movement inputs
+        this.sm.update(time,delta);
+        this.walk.update(time,delta);
+    }
+    actionComplete(){}
+}
+
 class Player extends Character {
     constructor(scene, gridX, gridY) {
         super(scene,gridX, gridY, 200,'smile');
@@ -27,10 +59,13 @@ class Player extends Character {
                         handleMovement(new Vector2(0, -1));
                     } else if (cursors.right.isDown) {
                         handleMovement(new Vector2(1, 0));
-                     } //else if (cursors.space.isDown) {
-                    //     // Perform action when space is pressed
-                    //     const tempTarget = player.walk.gridPos.add(player.walk.direction);
-                    // }
+                     } else if (Phaser.Input.Keyboard.JustDown(enterKey)) {
+                        const playerPosition = player.gridObj.position;
+                        const playerDirection = player.gridObj.direction;
+                        const lookPosition = playerPosition.add(playerDirection);
+
+                        player.world.interact(lookPosition);
+                    }
                 }
             },
             {
@@ -64,15 +99,27 @@ class Player extends Character {
 }
 
 class NPC extends Character {
-    constructor(scene, gridX, gridY, speed, sprite, name) {
+    constructor(scene, gridX, gridY, speed, sprite, name, dialogue = null) {
         super(scene, gridX , gridY , speed, sprite);
         this.name = name;   
+        this.dialogue = dialogue
+        this.interactable = (dialogue != null);
+        
     }
-    interact(){
 
-        // text? dialogue?
-        this.scene.scene.start('battleScene');
-        return true;
+    
+
+    interact(){
+        console.log("hai")
+        const textSystem = this.scene.textBox;
+        if (textSystem && this.dialogue){
+            textSystem.addParagraph(this.dialogue.slice(), () => {
+                this.scene.scene.start('battleScene');
+            })
+
+            
+        }
+        
     }
 
     update(time, delta) {

@@ -16,76 +16,133 @@ class TextBox {
             padding: options.padding || { x: 10, y: 10 },
             depth: options.depth || 10
         };
-
-        this.sentenceBuffer = [];      // Array to store sentences in the conversation
+        this.callback = null;
+        this.sentenceBuffer = [];
         this.currentSentence = '';     // Text currently being displayed
         this.textIndex = 0;            // Index for the typing effect
-        this.isTyping = false;         // Flag for typing effect
         this.typingEvent = null;       // Event reference for typing effect
-        this.sentenceComplete = true;  // Flag to check if a sentence has been fully displayed
-
         // Create text box components
         this.createBackground();
         this.createTextObject();
         this.hideTextBox();
 
-        // Set up input for space key
-        this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    }
 
-    // Start a conversation with an array of sentences
-    doConversation(sentences) {
-        this.sentenceBuffer = sentences;
-        this.sentenceComplete = true;
-        this.showNextSentence();
-    }
 
-    update() {
-        // Check if space is pressed to advance the conversation
-        if (this.sentenceComplete && Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
-            this.showNextSentence();
+        this.sm = new stateMachine(this);
+        const box = this;
+        this.setUpSM(
+            [
+                {
+                    name:"ready",
+                    enter(){},
+                    exit(){},
+                    update(time,delta){
+                        if ( box.sentenceBuffer.length > 0){
+                            box.sm.changeState("writing");
+                        }
+                    }
+                },
+                {
+                    name: "writing",
+                    enter(){
+                        // write buffered sentence
+                        // change to display state when text done
+                        box.printSentence();
+                    },
+                    exit(){},
+                    update(time,delta){
+                    }
+                },
+                {
+                    name: "displaying",
+                    enter(){},
+                    exit(){
+                    },
+                    update(time,delta){
+                        if (Phaser.Input.Keyboard.JustDown(enterKey)){
+                            if ( box.sentenceBuffer.length > 0){
+                                box.sm.changeState("writing")
+                            } else {
+                                box.endDialogue();
+                                if (box.callback){
+                                    box.callback();
+                                }
+                                box.sm.changeState("ready")
+                            }
+                            
+                        }
+                    }
+                }
+            ]
+        )
+
+        this.sm.changeState("ready")
+    }
+    // Public functions
+    addParagraph(arg, callback = null){
+        if ( this.sm.currentState == "ready"){
+            this.sentenceBuffer = arg
+            
+            if ( callback){
+                this.callback = callback;
+            }
+            return(true);
+        }
+        return(false);
+    }
+    update(time,delta){
+        this.sm.update(time,delta);
+    }
+    setUpSM(states){
+        for (let i of states){
+            this.sm.addState(i);
         }
     }
+   
 
-    showNextSentence() {
-        if (this.sentenceBuffer.length > 0) {
-            const nextSentence = this.sentenceBuffer.shift();
-            this.showText(nextSentence);
-        } else {
-            this.endConversation();
-        }
+
+    // priv functions
+    
+    endDialogue(){
+       this.hideTextBox();
+       this.textObject.setText('');
     }
 
-    showText(sentence) {
-        this.currentSentence = sentence;
+    showTextBox() {
+        this.background.setVisible(true);
+        this.textObject.setVisible(true);
+    }
+
+    hideTextBox() {
+        this.background.setVisible(false);
+        this.textObject.setVisible(false);
+        if (this.typingEvent) this.typingEvent.remove();
+    }
+
+    printSentence() {
+        this.currentSentence = this.sentenceBuffer.shift();
         this.textIndex = 0;
-        this.sentenceComplete = false;
-        this.isTyping = true;
-
+    
         // Show the text box and start typing effect
         this.showTextBox();
         if (this.typingEvent) this.typingEvent.remove();
         this.typingEvent = this.scene.time.addEvent({
-            delay: this.options.textSpeed,
-            callback: this.typeCharacter,
+            delay: enterKey.isDown? this.options.textSpeed/2: this.options.textSpeed,
+            callback: this.typeCharacter, // Call typeCharacter function to display each character
             callbackScope: this,
             loop: true
         });
     }
+    
 
     typeCharacter() {
         if (this.textIndex < this.currentSentence.length) {
             this.textObject.setText(this.currentSentence.slice(0, ++this.textIndex));
         } else {
             this.typingEvent.remove();
-            this.isTyping = false;
             this.sentenceComplete = true; // Mark sentence as complete to wait for input
+            this.sm.changeState("displaying")
         }
-    }
-
-    endConversation() {
-        this.hideTextBox();
-        this.sentenceBuffer = [];
     }
 
     // Create and manage the text box background
@@ -118,16 +175,5 @@ class TextBox {
         this.textObject.setDepth(this.options.depth);
     }
 
-    // Show and hide functions for the text box
-    showTextBox() {
-        this.background.setVisible(true);
-        this.textObject.setVisible(true);
-    }
-
-    hideTextBox() {
-        this.background.setVisible(false);
-        this.textObject.setVisible(false);
-        if (this.typingEvent) this.typingEvent.remove();
-        this.isTyping = false;
-    }
+    
 }
