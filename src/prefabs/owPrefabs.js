@@ -27,10 +27,10 @@ class Player extends Character {
                         handleMovement(new Vector2(0, -1));
                     } else if (cursors.right.isDown) {
                         handleMovement(new Vector2(1, 0));
-                    } else if (cursors.space.isDown) {
-                        // Perform action when space is pressed
-                        const tempTarget = player.walk.gridPos.add(player.walk.direction);
-                    }
+                     } //else if (cursors.space.isDown) {
+                    //     // Perform action when space is pressed
+                    //     const tempTarget = player.walk.gridPos.add(player.walk.direction);
+                    // }
                 }
             },
             {

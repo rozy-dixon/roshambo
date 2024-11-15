@@ -9,9 +9,22 @@ class Overworld extends Phaser.Scene {
         console.log('%cOVERWORLD SCENE :^)', testColor)
         window.localStorage ? console.log('%cLocal storage supported by this cat! (^･･^=)~', goodColor) : console.log('%cLocal storage not supported by this cat ~(=^･･^)', badColor)
 
+         // Instantiate the TextBox class
+         this.textBox = new TextBox(this, {
+            width: 400,
+            height: 100,
+            x: 650,
+            y: 650,
+            textSpeed: 50,
+            backgroundColor: 0x000000,
+            textColor: '#ffffff',
+            fontSize: '18px',
+            fontFamily: 'Arial',
+            padding: { x: 20, y: 20 }
+        });
+
         
-        // Optionally, you can use events or player actions to trigger more text
-        
+        this.talk(["haihaihelolol","eeeeee", "wASasdasdasdasdw"])
 
         // Load the data once and then pass it along
         const worldData = this.cache.json.get('worldData');
@@ -36,6 +49,7 @@ class Overworld extends Phaser.Scene {
         if (this.player){
             this.player.update(time,delta);
         }   
+        this.textBox.update(time,delta)
     }
     
     addObstacles(worldData){
@@ -48,11 +62,7 @@ class Overworld extends Phaser.Scene {
             this.obstacles.push(new obst(this,this.world, obstacle["pos"], current))
         }
     }
-    talk(wordPacks){
-        // enter talk mode, so world stops,
-
-        // 
-        
-
+    talk(wordPacks) {
+        this.textBox.doConversation(wordPacks);
     }
 }

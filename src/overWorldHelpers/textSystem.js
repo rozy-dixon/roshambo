@@ -2,39 +2,94 @@ class TextBox {
     constructor(scene, options = {}) {
         this.scene = scene;
 
-        // Default options for the textbox
+        // Default options for the text box
         this.options = {
-            width: options.width || scene.scale.width - 40,   // Width of the text box
-            height: options.height || 100,                    // Height of the text box
-            x: options.x || 0,                                // X position relative to the camera
-            y: options.y || 0,                                // Y position relative to the camera
-            textSpeed: options.textSpeed || 50,               // Speed of the typing effect (ms per character)
-            backgroundColor: options.backgroundColor || 0x000000, // Background color of the text box
-            textColor: options.textColor || '#ffffff',        // Text color
-            fontSize: options.fontSize || '20px',             // Font size
-            fontFamily: options.fontFamily || 'Arial',        // Font family
-            padding: options.padding || { x: 10, y: 10 },     // Padding within the textbox
-            depth: options.depth || 10                        // Default depth if not specified
+            width: options.width || scene.scale.width - 40,
+            height: options.height || 100,
+            x: options.x || 0,
+            y: options.y || 0,
+            textSpeed: options.textSpeed || 50,
+            backgroundColor: options.backgroundColor || 0x000000,
+            textColor: options.textColor || '#ffffff',
+            fontSize: options.fontSize || '20px',
+            fontFamily: options.fontFamily || 'Arial',
+            padding: options.padding || { x: 10, y: 10 },
+            depth: options.depth || 10
         };
 
-        this.text = '';             // Holds the full text to display
-        this.currentText = '';      // Text being progressively displayed
-        this.textIndex = 0;         // Index of the current character in the text
-        this.isTyping = false;      // Flag to track if typing effect is active
-        this.typingEvent = null;    // Event reference for typing effect
+        this.sentenceBuffer = [];      // Array to store sentences in the conversation
+        this.currentSentence = '';     // Text currently being displayed
+        this.textIndex = 0;            // Index for the typing effect
+        this.isTyping = false;         // Flag for typing effect
+        this.typingEvent = null;       // Event reference for typing effect
+        this.sentenceComplete = true;  // Flag to check if a sentence has been fully displayed
 
-        
-
-        // Create text box background
+        // Create text box components
         this.createBackground();
-
-        // Create text object within the text box
         this.createTextObject();
         this.hideTextBox();
+
+        // Set up input for space key
+        this.spaceKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
+    // Start a conversation with an array of sentences
+    doConversation(sentences) {
+        this.sentenceBuffer = sentences;
+        this.sentenceComplete = true;
+        this.showNextSentence();
+    }
+
+    update() {
+        // Check if space is pressed to advance the conversation
+        if (this.sentenceComplete && Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+            this.showNextSentence();
+        }
+    }
+
+    showNextSentence() {
+        if (this.sentenceBuffer.length > 0) {
+            const nextSentence = this.sentenceBuffer.shift();
+            this.showText(nextSentence);
+        } else {
+            this.endConversation();
+        }
+    }
+
+    showText(sentence) {
+        this.currentSentence = sentence;
+        this.textIndex = 0;
+        this.sentenceComplete = false;
+        this.isTyping = true;
+
+        // Show the text box and start typing effect
+        this.showTextBox();
+        if (this.typingEvent) this.typingEvent.remove();
+        this.typingEvent = this.scene.time.addEvent({
+            delay: this.options.textSpeed,
+            callback: this.typeCharacter,
+            callbackScope: this,
+            loop: true
+        });
+    }
+
+    typeCharacter() {
+        if (this.textIndex < this.currentSentence.length) {
+            this.textObject.setText(this.currentSentence.slice(0, ++this.textIndex));
+        } else {
+            this.typingEvent.remove();
+            this.isTyping = false;
+            this.sentenceComplete = true; // Mark sentence as complete to wait for input
+        }
+    }
+
+    endConversation() {
+        this.hideTextBox();
+        this.sentenceBuffer = [];
+    }
+
+    // Create and manage the text box background
     createBackground() {
-        // Set up background rectangle and ensure it is fixed to the camera
         this.background = this.scene.add.rectangle(
             this.options.x + this.options.width / 2,
             this.options.y + this.options.height / 2,
@@ -42,12 +97,12 @@ class TextBox {
             this.options.height,
             this.options.backgroundColor
         ).setOrigin(0.5);
-        this.background.setScrollFactor(0);  // Pins background to camera
+        this.background.setScrollFactor(0);
         this.background.setDepth(this.options.depth);
     }
 
+    // Create and manage the text object within the text box
     createTextObject() {
-        // Create text and ensure it is fixed to the camera
         this.textObject = this.scene.add.text(
             this.options.x + this.options.padding.x,
             this.options.y + this.options.padding.y,
@@ -59,72 +114,20 @@ class TextBox {
                 wordWrap: { width: this.options.width - this.options.padding.x * 2 }
             }
         );
-        this.textObject.setScrollFactor(0);  // Pins text to camera
+        this.textObject.setScrollFactor(0);
         this.textObject.setDepth(this.options.depth);
     }
 
-
-    showPara(para){
-        let sentence = para.slice();
-        let current = myWords.shift();
-        this.showText(current,  ()=>{
-            if (current){
-                this.textBox.showText(current, )
-            } else {
-                return;
-            }
-            current = myWords.shift();
-        });
-    }
-
-    showText(text, onComplete = null) {
-        this.text = text;
-        this.currentText = '';
-        this.textIndex = 0;
-        this.isTyping = true;
-        this.onComplete = onComplete;  // Assign the onComplete callback
-
-        // Show the text box before starting typing
-        this.showTextBox();
-
-        // Start typing effect
-        if (this.typingEvent) this.typingEvent.remove();
-        this.typingEvent = this.scene.time.addEvent({
-            delay: this.options.textSpeed,
-            callback: this.typeCharacter,
-            callbackScope: this,
-            loop: true
-        });
-    }
-
-    typeCharacter() {
-        if (this.textIndex < this.text.length) {
-            this.currentText += this.text[this.textIndex];
-            this.textObject.setText(this.currentText);
-            this.textIndex++;
-        } else {
-            // Finish typing and stop the event
-            this.typingEvent.remove();
-            this.isTyping = false;
-
-            // Call the onComplete callback if it exists
-            if (typeof this.onComplete === 'function') {
-                this.onComplete();
-            }
-        }
+    // Show and hide functions for the text box
+    showTextBox() {
+        this.background.setVisible(true);
+        this.textObject.setVisible(true);
     }
 
     hideTextBox() {
-        // Hides the text box and clears the text
         this.background.setVisible(false);
         this.textObject.setVisible(false);
         if (this.typingEvent) this.typingEvent.remove();
         this.isTyping = false;
-    }
-
-    showTextBox() {
-        // Shows the text box without starting any text
-        this.background.setVisible(true);
-        this.textObject.setVisible(true);
     }
 }
