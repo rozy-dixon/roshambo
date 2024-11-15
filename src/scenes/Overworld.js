@@ -23,8 +23,6 @@ class Overworld extends Phaser.Scene {
             padding: { x: 20, y: 20 }
         });
 
-        
-        this.talk(["haihaihelolol","eeeeee", "wASasdasdasdasdw"])
 
         // Load the data once and then pass it along
         const worldData = this.cache.json.get('worldData');
@@ -36,8 +34,9 @@ class Overworld extends Phaser.Scene {
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setZoom(3);
 
+
+
         this.enemies = []
-        
         const stalone = new NPC(this, 10, 10,5, "enemy", "Stalone", ["I love the taste of rocks!!"])
         this.enemies.push(stalone)
 
@@ -62,8 +61,5 @@ class Overworld extends Phaser.Scene {
             const current = worldData["objInfo"][obstacle["type"]]
             this.obstacles.push(new obst(this,this.world, obstacle["pos"], current))
         }
-    }
-    talk(wordPacks) {
-        this.textBox.addParagraph(wordPacks)
     }
 }
