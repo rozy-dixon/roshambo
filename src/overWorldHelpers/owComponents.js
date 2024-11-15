@@ -29,13 +29,13 @@ class walkComponent{
 
     updateDir(dir){
         if (!this.moving){
-            this.direction = dir.copy();
+            this.gridObj.direction = dir.copy();
         }
         
         // update the sprite appropriately
     }
     moveForward() {
-        const tempTarget = this.gridObj.position.add(this.direction);
+        const tempTarget = this.gridObj.position.add(this.gridObj.direction);
         if (this.moving || !this.world.isTileEnterable(tempTarget)) {
             return (false);
         }
@@ -50,20 +50,20 @@ class walkComponent{
 
     moveRoutine(time, delta) {
         // Calculate velocities based on direction, speed, and time delta
-        const velocityX = this.direction.x * this.speed * (delta / 1000);
-        const velocityY = this.direction.y * this.speed * (delta / 1000);
+        const velocityX = this.gridObj.direction.x * this.speed * (delta / 1000);
+        const velocityY = this.gridObj.direction.y * this.speed * (delta / 1000);
         // Update position
         
         this.parent.x += velocityX;
         this.parent.y += velocityY;
         // Check if the object has reached or overshot the target position in X or Y directions
         const checkAndCorrectPosition = (axis) => {
-            if (this.direction[axis] !== 0) {
+            if (this.gridObj.direction[axis] !== 0) {
                 const currentPos = this.parent[axis];
                 const targetPos = this.trueTargetPos[axis];
     
-                if ((this.direction[axis] > 0 && currentPos > targetPos) ||
-                    (this.direction[axis] < 0 && currentPos < targetPos)) {
+                if ((this.gridObj.direction[axis] > 0 && currentPos > targetPos) ||
+                    (this.gridObj.direction[axis] < 0 && currentPos < targetPos)) {
                     
                     this.parent[axis] = targetPos; // Snap to target position
                     this.world.dePopTile(this.gridObj.position, this.parent)
