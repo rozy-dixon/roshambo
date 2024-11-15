@@ -37,7 +37,7 @@ class Overworld extends Phaser.Scene {
 
 
         this.enemies = []
-        const stalone = new NPC(this, 10, 10,5, "enemy", "Stalone", ["I love the taste of rocks!!"])
+        const stalone = new NPC(this, 10, 10,5, "enemy", "Stalone", ["I love the taste of rocks!!", "do you like rocks?", "I'm gonna throw a rock", "(70% of the time)"])
         this.enemies.push(stalone)
 
         // set up obstacles in the scene

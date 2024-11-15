@@ -31,7 +31,7 @@ const testColor = "color: #91aa86;"
 const goodColor = "color: #cfd1af;"
 const badColor = "color: #c088ae;"
 // key variables
-let cursors, enterKey
+let cursors, enterKey, spaceKey
 // style variables
 const padding = 25
 const fontSize = 50

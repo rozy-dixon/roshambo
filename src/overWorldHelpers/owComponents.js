@@ -50,8 +50,8 @@ class walkComponent{
 
     moveRoutine(time, delta) {
         // Calculate velocities based on direction, speed, and time delta
-        const velocityX = this.gridObj.direction.x * this.speed * (delta / 1000);
-        const velocityY = this.gridObj.direction.y * this.speed * (delta / 1000);
+        const velocityX = this.gridObj.direction.x * this.speed * (delta / 1000) * this.parent.calcSpeedMult();
+        const velocityY = this.gridObj.direction.y * this.speed * (delta / 1000) * this.parent.calcSpeedMult();
         // Update position
         
         this.parent.x += velocityX;

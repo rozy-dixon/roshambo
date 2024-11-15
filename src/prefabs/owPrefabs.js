@@ -28,6 +28,9 @@ class Character extends Phaser.GameObjects.Sprite{
         this.walk.update(time,delta);
     }
     actionComplete(){}
+    calcSpeedMult(){
+        return(1)
+    }
 }
 
 class Player extends Character {
@@ -95,6 +98,9 @@ class Player extends Character {
     }
     actionComplete(){
         this.sm.changeState("idle");
+    }
+    calcSpeedMult(){
+        return(spaceKey.isDown? 2: 1 )
     }
 }
 
