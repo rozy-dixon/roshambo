@@ -40,6 +40,13 @@ class Overworld extends Phaser.Scene {
         const stalone = new NPC(this, 10, 10,5, "enemy", "Stalone", ["I love the taste of rocks!!", "do you like rocks?", "I'm gonna throw a rock", "(70% of the time)"])
         this.enemies.push(stalone)
 
+
+        const origami = new NPC(this, 2, 2,5, "enemy", "Origami", ["Wow!", "Lets fight!!!", "Im gonna give you a paper cut!!"])
+        this.enemies.push(origami)
+
+        const animeFan = new NPC(this, 10, 0,5, "enemy", "animeFan", ["I love anime!!", "we should really watch some anime after we play rock paper scizzors!", "My favorite anime character is naruto!"])
+        this.enemies.push(animeFan)
+
         // set up obstacles in the scene
         this.addObstacles(worldData);
     }

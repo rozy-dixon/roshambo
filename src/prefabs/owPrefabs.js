@@ -35,20 +35,49 @@ class Character extends Phaser.GameObjects.Sprite{
 
 class Player extends Character {
     constructor(scene, gridX, gridY) {
-        super(scene,gridX, gridY, 200,'smile');
+        super(scene,gridX, gridY, 200,'playerOw');
         // When defining states, make a reference to the object it belongs to. 
         // using this in its declaration scope will refer to itself.
         const player = this;
         const states = [
             {
                 name: "idle",
-                enter(){},
+                enter(){
+                    // Function to handle movement
+                    const handleMovement = (direction) => {
+                        player.walk.updateDir(direction);
+                        if ( player.walk.moveForward()){
+
+                            player.sm.changeState("walk");
+                        }
+                    };
+                
+                    // Listen for inputs and move the player
+                    if (cursors.left.isDown) {
+                        handleMovement(new Vector2(-1, 0));
+                    } else if (cursors.down.isDown) {
+                        handleMovement(new Vector2(0, 1));
+                    } else if (cursors.up.isDown) {
+                        handleMovement(new Vector2(0, -1));
+                    } else if (cursors.right.isDown) {
+                        handleMovement(new Vector2(1, 0));
+                     } else if (Phaser.Input.Keyboard.JustDown(enterKey)) {
+                        const playerPosition = player.gridObj.position;
+                        const playerDirection = player.gridObj.direction;
+                        const lookPosition = playerPosition.add(playerDirection);
+
+                        player.world.interact(lookPosition);
+                    } else{
+                        player.play("idle")
+                    }
+                },
                 exit(){},
                 update(time, delta) {
                     // Function to handle movement
                     const handleMovement = (direction) => {
                         player.walk.updateDir(direction);
                         if ( player.walk.moveForward()){
+
                             player.sm.changeState("walk");
                         }
                     };
@@ -73,7 +102,20 @@ class Player extends Character {
             },
             {
                 name: "walk",
-                enter(){},
+                enter(){
+                    if (player.gridObj.direction.x == 1 && player.anims.currentAnim?.key != 'walk-west'){
+                        player.play('walk-west')
+                    }
+                    if (player.gridObj.direction.x == -1 && player.anims.currentAnim?.key !== 'walk-east'){
+                        player.play('walk-east')
+                    }
+                    if (player.gridObj.direction.y == 1 && player.anims.currentAnim?.key !== 'walk-south'){
+                        player.play('walk-south')
+                    }
+                    if (player.gridObj.direction.y == -1 && player.anims.currentAnim?.key !== 'walk-north'){
+                        player.play('walk-north')
+                    }
+                },
                 exit(){},
                 update(time,delta){
                     

@@ -6,7 +6,10 @@ class Load extends Phaser.Scene {
     preload() {
         // loading bar
         this.load.json('worldData', 'src/overWorldHelpers/overWorld.json');
-        this.load.image('smile','./assets/images/placeHolderPlayer.png');
+        this.load.spritesheet('playerOw', './assets/images/playerOw.png',{
+            frameWidth: 32,
+            frameHeight: 32
+        })
         this.load.image('enemy','./assets/images/placeHolderEnemy.png')
         this.load.image('arrow','./assets/images/arrow.png')
         this.load.spritesheet('tileset', './assets/images/tileMapv2.png',{
@@ -30,6 +33,42 @@ class Load extends Phaser.Scene {
         // running checks
         console.log('%cLOAD SCENE :^)', testColor)
         // moving through
+
+        
+        this.anims.create({
+            key:'idle',
+            frames: this.anims.generateFrameNumbers('playerOw', { start:3, end: 4}),
+            frameRate: 10,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key:'walk-south',
+            frames: this.anims.generateFrameNumbers('playerOw', { start:0, end: 2}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key:'walk-north',
+            frames: this.anims.generateFrameNumbers('playerOw', { start:10, end: 12}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key:'walk-west',
+            frames: this.anims.generateFrameNumbers('playerOw', { start:14, end: 16}),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key:'walk-east',
+            frames: this.anims.generateFrameNumbers('playerOw', { start:4, end: 6}),
+            frameRate: 10,
+            repeat: -1
+        })
+
+
+
         this.scene.start('overworldScene')
     }
 }
