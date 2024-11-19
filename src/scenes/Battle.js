@@ -16,95 +16,115 @@ class Battle extends Phaser.Scene {
         this.ATTACKOPTIONS = [ "rock", "paper", "scissors" ]
 
         this.PLAYERNAME = data.PLAYERNAME
-
-        // will need to take in opponent from overworld scene
     }
 
     create() {
         // running checks
         console.log('%cBATTLE SCENE :^)', testColor)
 
-        // opponent UI boxes
-        this.opponentNameUIBox = this.add.rectangle(
-            this.PADDING,
-            this.PADDING,
-            width/3,
-            height/10,
-            0xffffff
-        ).setOrigin(0)
+        // animation here
+        this.cameras.main.setBackgroundColor(0xbababa)
 
-        // player UI boxes
-        this.playerNameUIBox = this.add.rectangle(
-            width/2, 
-            height/2,
-            width/2 - this.PADDING,
-            height/10,
-            0xffffff
-        ).setOrigin(0)
-        this.playerOptionsUIBox = this.add.rectangle(
-            width/2,
-            this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING,
-            width/2 - this.PADDING,
-            height - (this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING) - this.PADDING,
-            0xffffff
-        ).setOrigin(0)
+        const battleIntroOverlay = this.add.sprite(centerX, centerY, 'battle-intro-overlay').setDepth(1)
 
-        // player and opponent
-        this.opponent = {
-            name: this.name,
-            favors: this.pref,
-            health: 1,
-        }
+        const tempPlayerSprite = this.add.sprite(392.5, height, 'player-fight').setOrigin(.5, 1)
+        const tempOpponentSprite = this.add.sprite(width, height, `${this.name}-fight`).setOrigin(1.5, 1)
 
-        this.player = {
-            health: 1,
-        }
+        battleIntroOverlay.anims.play('battle-intro')
 
-        // -------------------------------------- UI
+        this.setupFinished = false
 
-        this.opponentNamePlate = this.createNamePlate(this.opponentNameUIBox, this.opponent.name, this.opponent.health)
-        this.playerNamePlate = this.createNamePlate(this.playerNameUIBox, this.PLAYERNAME, this.player.health)
+        battleIntroOverlay.on('animationcomplete', () => {
+            tempPlayerSprite.setAlpha(0)
+            tempOpponentSprite.setAlpha(0)
 
-        this.optionOptionText = {
-            attackText: this.createOptionText(this.playerOptionsUIBox, 0),
-            bagText: this.createOptionText(this.playerOptionsUIBox, 1, false, true),
-            defendText: this.createOptionText(this.playerOptionsUIBox, 2, true, false),
-            runText: this.createOptionText(this.playerOptionsUIBox, 3, true, true),
-        }
-        
-        // visuals
-        this.playerSprite = this.add.sprite((width - this.playerOptionsUIBox.width) / 2 - 100, height, 'player-fight').setOrigin(.5, 1)
-        this.opponentSprite = this.add.image(width, centerY, `${this.opponent.name}-fight`).setDepth(-1).setOrigin(1.5, .6)
+            // opponent UI boxes
+            this.opponentNameUIBox = this.add.rectangle(
+                this.PADDING,
+                this.PADDING,
+                width/3,
+                height/10,
+                0xffffff
+            ).setOrigin(0)
 
-        this.arrow = this.add.circle(this.optionOptionText.attackText.x - this.optionOptionText.attackText.width / 2, this.optionOptionText.attackText.y, 25, 0x0000ff).setOrigin(1.5, .5)
-        this.arrowPosition = { x: 0, y: 0 }
+            // player UI boxes
+            this.playerNameUIBox = this.add.rectangle(
+                width/2, 
+                height/2,
+                width/2 - this.PADDING,
+                height/10,
+                0xffffff
+            ).setOrigin(0)
+            this.playerOptionsUIBox = this.add.rectangle(
+                width/2,
+                this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING,
+                width/2 - this.PADDING,
+                height - (this.playerNameUIBox.y + this.playerNameUIBox.height + this.PADDING) - this.PADDING,
+                0xffffff
+            ).setOrigin(0)
 
-        this.optionTexts = [
-            [this.optionOptionText.attackText, this.optionOptionText.bagText],
-            [this.optionOptionText.defendText, this.optionOptionText.runText]
-        ]        
-        this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+            // player and opponent
+            this.opponent = {
+                name: this.name,
+                favors: this.pref,
+                health: 1,
+            }
 
-        // what texts are available?
-        this.mode = this.MODES[0]
+            this.player = {
+                health: 1,
+            }
 
-        // -------------------------------------- MODE UI display
-        this.attackOptionText = {
-            rockText: this.createAttackText(this.playerOptionsUIBox, 0, 1, 2).setAlpha(0),
-            paperText: this.createAttackText(this.playerOptionsUIBox, 1, 2, 1).setAlpha(0),
-            scissorsText: this.createAttackText(this.playerOptionsUIBox, 2, 3, 2).setAlpha(0),
-        }
+            // -------------------------------------- UI
 
-        this.bagOptionText = {
-            bagText: this.createCenteredText(this.playerOptionsUIBox, 'you have no items').setAlpha(0)
-        }
+            this.opponentNamePlate = this.createNamePlate(this.opponentNameUIBox, this.opponent.name, this.opponent.health)
+            this.playerNamePlate = this.createNamePlate(this.playerNameUIBox, this.PLAYERNAME, this.player.health)
 
-        this.defendOptionText = {
-            defendText: this.createCenteredText(this.playerOptionsUIBox, 'imagine a little cut\nscene here').setAlpha(0)
-        }
+            this.optionOptionText = {
+                attackText: this.createOptionText(this.playerOptionsUIBox, 0),
+                bagText: this.createOptionText(this.playerOptionsUIBox, 1, false, true),
+                defendText: this.createOptionText(this.playerOptionsUIBox, 2, true, false),
+                runText: this.createOptionText(this.playerOptionsUIBox, 3, true, true),
+            }
+            
+            // visuals
+            this.playerSprite = this.add.sprite((width - this.playerOptionsUIBox.width) / 2 - 100, height, 'player-fight').setOrigin(.5, 1)
+            this.opponentSprite = this.add.image(width, centerY, `${this.opponent.name}-fight`).setDepth(-1).setOrigin(1.5, .6)
+            console.log(this.opponentSprite.x, this.opponentSprite.y)
+
+            this.arrow = this.add.circle(this.optionOptionText.attackText.x - this.optionOptionText.attackText.width / 2, this.optionOptionText.attackText.y, 25, 0x0000ff).setOrigin(1.5, .5)
+            this.arrowPosition = { x: 0, y: 0 }
+
+            this.optionTexts = [
+                [this.optionOptionText.attackText, this.optionOptionText.bagText],
+                [this.optionOptionText.defendText, this.optionOptionText.runText]
+            ]        
+            this.selectText(this.arrowPosition.x, this.arrowPosition.y)
+
+            // what texts are available?
+            this.mode = this.MODES[0]
+
+            // -------------------------------------- MODE UI display
+            this.attackOptionText = {
+                rockText: this.createAttackText(this.playerOptionsUIBox, 0, 1, 2).setAlpha(0),
+                paperText: this.createAttackText(this.playerOptionsUIBox, 1, 2, 1).setAlpha(0),
+                scissorsText: this.createAttackText(this.playerOptionsUIBox, 2, 3, 2).setAlpha(0),
+            }
+
+            this.bagOptionText = {
+                bagText: this.createCenteredText(this.playerOptionsUIBox, 'you have no items').setAlpha(0)
+            }
+
+            this.defendOptionText = {
+                defendText: this.createCenteredText(this.playerOptionsUIBox, 'imagine a little cut\nscene here').setAlpha(0)
+            }
+
+            this.setupFinished = true
+        })
     }
 
     update() {
+        if (this.setupFinished == false) { return }
+
         if (this.mode == "options") {
             this.optionOptionText.attackText.alpha = this.optionOptionText.defendText.alpha = this.optionOptionText.bagText.alpha = this.optionOptionText.runText.alpha = 1
             this.attackOptionText.rockText.alpha = this.attackOptionText.paperText.alpha = this.attackOptionText.scissorsText.alpha = 0

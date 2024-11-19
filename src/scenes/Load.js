@@ -36,6 +36,11 @@ class Load extends Phaser.Scene {
         this.load.image('Origami-fight', './assets/images/origami-fight.png')
         this.load.image('Stalone-fight', './assets/images/stalone-fight.png')
         this.load.image('player-fight', './assets/images/player-fight.png')
+
+        this.load.spritesheet('battle-intro-overlay', './assets/spritesheets/battle-intro-overlay.png', {
+            frameWidth: width,
+            frameHeight: height
+        })
     }
 
     create() {
@@ -93,6 +98,13 @@ class Load extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('playerOw', { start:4, end: 6}),
             frameRate: 10,
             repeat: -1
+        })
+
+        this.anims.create({
+            key:'battle-intro',
+            frames: this.anims.generateFrameNumbers('battle-intro-overlay', { start:0, end: -1 }),
+            frameRate: 40,
+            repeat: 0
         })
 
         this.scene.start('titleScene')
