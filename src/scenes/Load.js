@@ -31,6 +31,11 @@ class Load extends Phaser.Scene {
         this.load.image('rock-stalone', './assets/images/rock-stalone.png')
         this.load.image('paper-stalone', './assets/images/paper-stalone.png')
         this.load.image('scissors-stalone', './assets/images/scissors-stalone.png')
+
+        this.load.image('animeFan-fight', './assets/images/anime-fan-fight.png')
+        this.load.image('Origami-fight', './assets/images/origami-fight.png')
+        this.load.image('Stalone-fight', './assets/images/stalone-fight.png')
+        this.load.image('player-fight', './assets/images/player-fight.png')
     }
 
     create() {

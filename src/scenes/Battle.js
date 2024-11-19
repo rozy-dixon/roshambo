@@ -15,6 +15,8 @@ class Battle extends Phaser.Scene {
         this.OPTIONS = [ "ATTACK", "BAG", "DEFEND", "RUN" ]
         this.ATTACKOPTIONS = [ "rock", "paper", "scissors" ]
 
+        this.PLAYERNAME = data.PLAYERNAME
+
         // will need to take in opponent from overworld scene
     }
 
@@ -61,7 +63,7 @@ class Battle extends Phaser.Scene {
         // -------------------------------------- UI
 
         this.opponentNamePlate = this.createNamePlate(this.opponentNameUIBox, this.opponent.name, this.opponent.health)
-        this.playerNamePlate = this.createNamePlate(this.playerNameUIBox, 'your name...', this.player.health)
+        this.playerNamePlate = this.createNamePlate(this.playerNameUIBox, this.PLAYERNAME, this.player.health)
 
         this.optionOptionText = {
             attackText: this.createOptionText(this.playerOptionsUIBox, 0),
@@ -71,8 +73,8 @@ class Battle extends Phaser.Scene {
         }
         
         // visuals
-        this.playerSprite = this.add.sprite((width - this.playerOptionsUIBox.width) / 2 - 100, height, 'player-battle').setOrigin(.5, 1).setScale(.5)
-        this.opponentSprite = this.add.circle((centerX / 2) * 3, this.PADDING, 300, 0xffffff)
+        this.playerSprite = this.add.sprite((width - this.playerOptionsUIBox.width) / 2 - 100, height, 'player-fight').setOrigin(.5, 1)
+        this.opponentSprite = this.add.image(width, centerY, `${this.opponent.name}-fight`).setDepth(-1).setOrigin(1.5, .6)
 
         this.arrow = this.add.circle(this.optionOptionText.attackText.x - this.optionOptionText.attackText.width / 2, this.optionOptionText.attackText.y, 25, 0x0000ff).setOrigin(1.5, .5)
         this.arrowPosition = { x: 0, y: 0 }
@@ -150,19 +152,18 @@ class Battle extends Phaser.Scene {
                     console.log("win");
                 } else if( ( 0 + 1 )% 3 == opChoice){
                     console.log("lose")
-                    // lose condition
-                    // clear gameState
                     for (let key in defeated){
                         defeated[key] = false;
                     }
-                    savedPlayerPos = [0,0]
+                    savedPlayerPos = [10,8]
                 } else{
                     console.log("draw")
                 }
 
                 this.scene.start('resultsScene', {
                     OPPONENT_ATTACK: this.ATTACKOPTIONS[opChoice],
-                    ATTACK: this.ATTACKOPTIONS[0]
+                    ATTACK: this.ATTACKOPTIONS[0],
+                    PLAYERNAME: this.PLAYERNAME,
                 })
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
@@ -172,21 +173,18 @@ class Battle extends Phaser.Scene {
                     console.log("win");
                 } else if( ( 1 + 1 )% 3 == opChoice){
                     console.log("lose")
-                    // lose condition
-                    // clear gameState
                     for (let key in defeated){
                         defeated[key] = false;
                     }
-                    savedPlayerPos = [0,0]
+                    savedPlayerPos = [10,8]
                 } else{
                     console.log("draw")
                 }
 
-
-                
                 this.scene.start('resultsScene', {
                     OPPONENT_ATTACK: this.ATTACKOPTIONS[opChoice],
-                    ATTACK: this.ATTACKOPTIONS[1]
+                    ATTACK: this.ATTACKOPTIONS[1],
+                    PLAYERNAME: this.PLAYERNAME,
                 })
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
@@ -198,12 +196,10 @@ class Battle extends Phaser.Scene {
                     console.log("win");
                 } else if( ( 2 + 1 )% 3 == opChoice){
                     console.log("lose")
-                    // lose condition
-                    // clear gameState
                     for (let key in defeated){
                         defeated[key] = false;
                     }
-                    savedPlayerPos = [0,0]
+                    savedPlayerPos = [10,8]
                 } else{
                     console.log("draw")
                 }
@@ -211,7 +207,8 @@ class Battle extends Phaser.Scene {
 
                 this.scene.start('resultsScene', {
                     OPPONENT_ATTACK: this.ATTACKOPTIONS[opChoice],
-                    ATTACK: this.ATTACKOPTIONS[2]
+                    ATTACK: this.ATTACKOPTIONS[2],
+                    PLAYERNAME: this.PLAYERNAME,
                 })
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.down)) {

@@ -16,7 +16,7 @@ let config = {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     zoom: Math.min((window.innerHeight/dimensions.height)-.01, (window.innerWidth/dimensions.width)-.01),
-    scene: [ Load, Play, Title, Overworld, Battle, Results, Keys ]
+    scene: [ Load, Title, Overworld, Battle, Results, Victory, Keys ]
 }
 
 // game variables

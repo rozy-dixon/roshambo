@@ -170,6 +170,7 @@ class NPC extends Character {
                 textSystem.addParagraph(this.dialogue.slice(), () => {
                     this.scene.save()
                     this.scene.scene.start('battleScene', {
+                        PLAYERNAME: this.scene.PLAYERNAME,
                         NAME: this.name,
                         PREF: this.preference
                     });

@@ -6,11 +6,20 @@ class Results extends Phaser.Scene {
     init(data) {
         this.OPPONENT_ATTACK = data.OPPONENT_ATTACK
         this.ATTACK = data.ATTACK
+
+        this.PLAYERNAME = data.PLAYERNAME
     }
 
     create() {
+        
         setTimeout(() => {
-            this.scene.start('overworldScene')
+            for (let key in defeated){
+                if ( defeated[key] == false){
+                    this.scene.start('overworldScene')
+                    return;
+                }
+            }
+            this.scene.start('victoryScene')
         }, 1000)
     }
 

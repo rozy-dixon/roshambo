@@ -29,7 +29,6 @@ class Overworld extends Phaser.Scene {
             padding: { x: 20, y: 20 }
         });
 
-
         // Load the data once and then pass it along
         const worldData = this.cache.json.get('worldData');
         this.world = new worldGrid(worldData, this);
@@ -39,8 +38,6 @@ class Overworld extends Phaser.Scene {
         this.player.setDepth(1);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setZoom(3);
-
-
 
         this.enemies = []
         const stalone = new NPC(this, 30,  15,5, "enemy", "Stalone", ["I love the taste of rocks!!", "do you like rocks?", "I'm gonna throw a rock", "(70% of the time)"],0)
@@ -53,20 +50,14 @@ class Overworld extends Phaser.Scene {
         const animeFan = new NPC(this, 13, 40,5, "enemy", "animeFan", ["I love anime!!", "we should really watch some anime after we play rock paper scizzors!", "My favorite anime character is naruto!"], 2)
         this.enemies.push(animeFan)
 
-        
-
-
-
         // set up obstacles in the scene
         this.addObstacles(worldData);
     }
-
 
     save(){
         savedPlayerPos = [this.player.gridObj.position.x,this.player.gridObj.position.y]
         
     }
-
 
     update(time,delta) {
         if (this.textBox.sm.currentState == "ready")
@@ -84,7 +75,6 @@ class Overworld extends Phaser.Scene {
             for ( let j = 0; j < obstacleData[i].length; j ++){
                 const current =(obstacleData[i][j])
                 if (current){
-                    console.log(worldData['objInfo'][current])
                     this.obstacles.push(new obst(this,this.world, [j,i], worldData["objInfo"][current]))
                 }
             }   
