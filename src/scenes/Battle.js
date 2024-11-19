@@ -50,7 +50,7 @@ class Battle extends Phaser.Scene {
         // player and opponent
         this.opponent = {
             name: this.name,
-            favors: 0,
+            favors: this.pref,
             health: 1,
         }
 
