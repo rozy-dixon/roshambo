@@ -42,7 +42,7 @@ const fontSize = 50
 player position
 who has been beaten
 */
-let savedPlayerPos = [0,0];
+let savedPlayerPos = [10,8];
 let defeated = {
     "Stalone":false,
     "Origami":false,

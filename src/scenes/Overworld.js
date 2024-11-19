@@ -37,14 +37,14 @@ class Overworld extends Phaser.Scene {
 
 
         this.enemies = []
-        const stalone = new NPC(this, 10, 10,5, "enemy", "Stalone", ["I love the taste of rocks!!", "do you like rocks?", "I'm gonna throw a rock", "(70% of the time)"],0)
+        const stalone = new NPC(this, 30,  15,5, "enemy", "Stalone", ["I love the taste of rocks!!", "do you like rocks?", "I'm gonna throw a rock", "(70% of the time)"],0)
         this.enemies.push(stalone)
 
 
-        const origami = new NPC(this, 2, 2,5, "enemy", "Origami", ["Wow!", "Lets fight!!!", "Im gonna give you a paper cut!!"], 1)
+        const origami = new NPC(this, 17, 12,5, "enemy", "Origami", ["Wow!", "Lets fight!!!", "Im gonna give you a paper cut!!"], 1)
         this.enemies.push(origami)
 
-        const animeFan = new NPC(this, 10, 0,5, "enemy", "animeFan", ["I love anime!!", "we should really watch some anime after we play rock paper scizzors!", "My favorite anime character is naruto!"], 2)
+        const animeFan = new NPC(this, 13, 40,5, "enemy", "animeFan", ["I love anime!!", "we should really watch some anime after we play rock paper scizzors!", "My favorite anime character is naruto!"], 2)
         this.enemies.push(animeFan)
 
         
@@ -74,10 +74,16 @@ class Overworld extends Phaser.Scene {
         this.obstacles = []
         // Get the list of obstacles needed
         const obstacleData = worldData["tilemap"]["layers"]["obstacles"]
-        for (let obstacle of obstacleData){
+        for (let i = 0; i < obstacleData.length; i++){
+            for ( let j = 0; j < obstacleData[i].length; j ++){
+                const current =(obstacleData[i][j])
+                if (current){
+                    console.log(worldData['objInfo'][current])
+                    this.obstacles.push(new obst(this,this.world, [j,i], worldData["objInfo"][current]))
+                }
+            }   
             // Given the name and the position, add the obstacle
-            const current = worldData["objInfo"][obstacle["type"]]
-            this.obstacles.push(new obst(this,this.world, obstacle["pos"], current))
+            
         }
     }
 }
