@@ -3,12 +3,14 @@ class Battle extends Phaser.Scene {
         super('battleScene')
     }
 
-    init() {
+    init(data) {
         // UI variables
         this.PADDING = 25
         this.FONTSIZE = 50
         this.TEXTSTYLE = { fontSize: this.FONTSIZE, color: '#000000' }
 
+        this.name = data.NAME;
+        this.pref = data.PREF;
         this.MODES = [ "options", "attack", "bag", "defend", "run" ]
         this.OPTIONS = [ "ATTACK", "BAG", "DEFEND", "RUN" ]
         this.ATTACKOPTIONS = [ "rock", "paper", "scissors" ]
@@ -47,7 +49,7 @@ class Battle extends Phaser.Scene {
 
         // player and opponent
         this.opponent = {
-            name: "Stalone",
+            name: this.name,
             favors: 0,
             health: 1,
         }
@@ -134,26 +136,81 @@ class Battle extends Phaser.Scene {
         }
 
         if (this.mode == "attack") {
+            console.log(defeated)
             this.optionOptionText.attackText.alpha = this.optionOptionText.defendText.alpha = this.optionOptionText.bagText.alpha = this.optionOptionText.runText.alpha = 0
             this.attackOptionText.rockText.alpha = this.attackOptionText.paperText.alpha = this.attackOptionText.scissorsText.alpha = 1
             this.bagOptionText.bagText.alpha = 0
             this.defendOptionText.defendText.alpha = 0
             this.arrow.alpha = 0
             if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
+                const opChoice = this.weightedAttack(this.opponent.favors)
+                if ((opChoice + 1)% 3 == 0){
+                    defeated[this.opponent.name] = true;
+                    
+                    console.log("win");
+                } else if( ( 0 + 1 )% 3 == opChoice){
+                    console.log("lose")
+                    // lose condition
+                    // clear gameState
+                    for (let key in defeated){
+                        defeated[key] = false;
+                    }
+                    savedPlayerPos = [0,0]
+                } else{
+                    console.log("draw")
+                }
+
                 this.scene.start('resultsScene', {
-                    OPPONENT_ATTACK: this.ATTACKOPTIONS[this.weightedAttack(this.opponent.favors)],
+                    OPPONENT_ATTACK: this.ATTACKOPTIONS[opChoice],
                     ATTACK: this.ATTACKOPTIONS[0]
                 })
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.up)) {
+                const opChoice = this.weightedAttack(this.opponent.favors)
+                if ((opChoice + 1)% 3 == 1){
+                    defeated[this.opponent.name]  = true;
+                    console.log("win");
+                } else if( ( 1 + 1 )% 3 == opChoice){
+                    console.log("lose")
+                    // lose condition
+                    // clear gameState
+                    for (let key in defeated){
+                        defeated[key] = false;
+                    }
+                    savedPlayerPos = [0,0]
+                } else{
+                    console.log("draw")
+                }
+
+
+                
                 this.scene.start('resultsScene', {
-                    OPPONENT_ATTACK: this.ATTACKOPTIONS[this.weightedAttack(this.opponent.favors)],
+                    OPPONENT_ATTACK: this.ATTACKOPTIONS[opChoice],
                     ATTACK: this.ATTACKOPTIONS[1]
                 })
             }
             if (Phaser.Input.Keyboard.JustDown(cursors.right)) {
+
+
+                const opChoice = this.weightedAttack(this.opponent.favors)
+                if ((opChoice + 1)% 3 == 2){
+                    defeated[this.opponent.name] = true;
+                    console.log("win");
+                } else if( ( 2 + 1 )% 3 == opChoice){
+                    console.log("lose")
+                    // lose condition
+                    // clear gameState
+                    for (let key in defeated){
+                        defeated[key] = false;
+                    }
+                    savedPlayerPos = [0,0]
+                } else{
+                    console.log("draw")
+                }
+
+
                 this.scene.start('resultsScene', {
-                    OPPONENT_ATTACK: this.ATTACKOPTIONS[this.weightedAttack(this.opponent.favors)],
+                    OPPONENT_ATTACK: this.ATTACKOPTIONS[opChoice],
                     ATTACK: this.ATTACKOPTIONS[2]
                 })
             }

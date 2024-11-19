@@ -29,7 +29,7 @@ class Overworld extends Phaser.Scene {
         this.world = new worldGrid(worldData, this);
 
         // After grid is created, we can initialize the player and other objects
-        this.player = new Player(this, 0, 0, 'smile');
+        this.player = new Player(this, savedPlayerPos[0],savedPlayerPos[1], 'smile');
         this.player.setDepth(1);
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setZoom(3);
@@ -47,9 +47,22 @@ class Overworld extends Phaser.Scene {
         const animeFan = new NPC(this, 10, 0,5, "enemy", "animeFan", ["I love anime!!", "we should really watch some anime after we play rock paper scizzors!", "My favorite anime character is naruto!"])
         this.enemies.push(animeFan)
 
+        
+
+
+
         // set up obstacles in the scene
         this.addObstacles(worldData);
     }
+
+
+    save(){
+        savedPlayerPos = [this.player.gridObj.position.x,this.player.gridObj.position.y]
+        for (let enemy of this.enemies){
+            defeated[enemy.name] = enemy.defeated
+        }
+    }
+
 
     update(time,delta) {
         if (this.textBox.sm.currentState == "ready")

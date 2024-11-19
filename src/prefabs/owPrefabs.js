@@ -14,6 +14,10 @@ class Character extends Phaser.GameObjects.Sprite{
         this.sm = new stateMachine();
     }
 
+    Init(data){
+
+    }
+
     setUpSM(states){
         //adding states.
         for ( let i of states){
@@ -147,23 +151,34 @@ class Player extends Character {
 }
 
 class NPC extends Character {
-    constructor(scene, gridX, gridY, speed, sprite, name, dialogue = null) {
+    constructor(scene, gridX, gridY, speed, sprite, name, dialogue = null, preference) {
         super(scene, gridX , gridY , speed, sprite);
         this.name = name;   
         this.dialogue = dialogue
         this.interactable = (dialogue != null);
-        
+        this.preference = preference;
     }
 
     
 
     interact(){
-        console.log("hai")
+        console.log(defeated)
         const textSystem = this.scene.textBox;
         if (textSystem && this.dialogue){
-            textSystem.addParagraph(this.dialogue.slice(), () => {
-                this.scene.scene.start('battleScene');
-            })
+            if (defeated[this.name] == false){
+                textSystem.addParagraph(this.dialogue.slice(), () => {
+                    this.scene.save()
+                    this.scene.scene.start('battleScene', {
+                        NAME: this.name,
+                        PREF: this.preference
+                    });
+                })
+            } else {
+                textSystem.addParagraph([" I can't believe I lost!"], () => {
+                    return;
+                })
+            }
+            
 
             
         }

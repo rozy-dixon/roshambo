@@ -80,7 +80,6 @@ class worldGrid{
     }
     interact(pos){
         let temp = this.getTile(pos)
-        console.log(temp)
         if (temp != null && temp.obj && temp.obj.interactable == true){
             console.log(temp)
             return(temp.obj.interact());

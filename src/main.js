@@ -35,3 +35,16 @@ let cursors, enterKey, spaceKey
 // style variables
 const padding = 25
 const fontSize = 50
+
+
+// declare global state variables
+/* 
+player position
+who has been beaten
+*/
+let savedPlayerPos = [0,0];
+let defeated = {
+    "Stalone":false,
+    "Origami":false,
+    "animeFan": false
+};
