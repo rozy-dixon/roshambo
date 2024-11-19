@@ -5,7 +5,7 @@ class Load extends Phaser.Scene {
 
     preload() {
         // loading bar
-        this.load.json('worldData', './src/overWorldHelpers/overWorld.json');
+        this.load.json('worldData', './src/overWorldHelpers/overworld.json');
         this.load.spritesheet('playerOw', './assets/images/playerOw.png',{
             frameWidth: 32,
             frameHeight: 32
