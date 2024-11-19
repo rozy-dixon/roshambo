@@ -157,6 +157,7 @@ class NPC extends Character {
         this.dialogue = dialogue
         this.interactable = (dialogue != null);
         this.preference = preference;
+        this.play(name)
     }
 
     

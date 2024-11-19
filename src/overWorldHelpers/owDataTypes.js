@@ -54,17 +54,9 @@ class worldGrid{
                     this.grid[x] = [];
                 }
                 // maybe change this to have a default tile instead of showing no tile. this works better if there are layers.
-                this.grid[x][y] = background[x][y] >= 0? ( new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset',  background[x][y]).setOrigin(0)) ): null ;
+                this.grid[x][y] = new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset',  background[x][y]).setOrigin(0))  ;
             }
         }
-    }
-     // Create the grid from background data
-     createGrid(background) {
-        return background.map((row, y) => 
-            row.map((tileId, x) => 
-                new tile(this.scene.add.sprite(x * this.tileSize, y * this.tileSize, 'tileset', tileId).setOrigin(0))
-            )
-        );
     }
 
 

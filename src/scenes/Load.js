@@ -17,6 +17,10 @@ class Load extends Phaser.Scene {
             frameHeight: 32
         })
 
+        this.load.spritesheet('enemies','./assets/images/rpgEnemyOw.png',{
+            frameWidth: 32,
+            frameHeight: 32
+        })
         // load sprites
         this.load.image('player-battle', './assets/images/player-battle.png')
 
@@ -34,7 +38,26 @@ class Load extends Phaser.Scene {
         console.log('%cLOAD SCENE :^)', testColor)
         // moving through
 
-        
+        this.anims.create({
+            key:'Stalone',
+            frames: this.anims.generateFrameNumbers('enemies', {start:2, end:3}),
+            frameRate:5,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key:'animeFan',
+            frames: this.anims.generateFrameNumbers('enemies', {start:0, end:1}),
+            frameRate:5,
+            repeat: -1
+        })
+        this.anims.create({
+            key:'Origami',
+            frames: this.anims.generateFrameNumbers('enemies', {start:4, end:5}),
+            frameRate:5,
+            repeat: -1
+        })
+
         this.anims.create({
             key:'idle',
             frames: this.anims.generateFrameNumbers('playerOw', { start:3, end: 4}),
@@ -66,6 +89,8 @@ class Load extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         })
+
+
 
 
 

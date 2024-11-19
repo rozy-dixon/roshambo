@@ -136,12 +136,12 @@ class Battle extends Phaser.Scene {
         }
 
         if (this.mode == "attack") {
-            console.log(defeated)
             this.optionOptionText.attackText.alpha = this.optionOptionText.defendText.alpha = this.optionOptionText.bagText.alpha = this.optionOptionText.runText.alpha = 0
             this.attackOptionText.rockText.alpha = this.attackOptionText.paperText.alpha = this.attackOptionText.scissorsText.alpha = 1
             this.bagOptionText.bagText.alpha = 0
             this.defendOptionText.defendText.alpha = 0
             this.arrow.alpha = 0
+            console.log(this.opponent.favors)
             if (Phaser.Input.Keyboard.JustDown(cursors.left)) {
                 const opChoice = this.weightedAttack(this.opponent.favors)
                 if ((opChoice + 1)% 3 == 0){
