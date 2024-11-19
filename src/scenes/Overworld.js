@@ -2,11 +2,17 @@
 class Overworld extends Phaser.Scene {
     constructor() {
         super('overworldScene')
-        
+    }
+
+    init(data) {
+        this.PLAYERNAME = data.PLAYERNAME
     }
 
     create() {
         console.log('%cOVERWORLD SCENE :^)', testColor)
+
+        console.log(this.PLAYERNAME)
+
         window.localStorage ? console.log('%cLocal storage supported by this cat! (^･･^=)~', goodColor) : console.log('%cLocal storage not supported by this cat ~(=^･･^)', badColor)
 
          // Instantiate the TextBox class
